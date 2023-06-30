@@ -1,0 +1,10 @@
+owner: subramaniank
+pipeline:
+  citool: ''
+  releaseBranch: ''
+  sonarqube: null
+productionUse: CustomerCurrent
+repoType: Documentation
+reporting:
+  product: Analytics
+  teamname: Analytics
