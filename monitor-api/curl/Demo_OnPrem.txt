@@ -1,0 +1,142 @@
+1) Active Machines with count 
+
+Request
+curl --location --request GET 'https://[[REDACTED]]/Citrix/Monitor/OData/v4/Data/Machines' --data-urlencode "$filter=LifecycleState eq 0" --data-urlencode "$count=true" --ntlm -u 'DOMAIN\YOUR_USERNAME:YOUR_PASSWORD'
+
+Response
+{
+   "@odata.context" : "https://[[REDACTED]]/Citrix/Monitor/OData/v4/Data/$metadata#Machines",
+   "@odata.nextLink" : "https://[[REDACTED]]/Citrix/Monitor/OData/v4/Data/Machines?$skip=100",
+   "value" : [
+      {
+         "AgentVersion" : "2203.0.0.33220",
+         "AssociatedUserFullNames" : null,
+         "AssociatedUserNames" : null,
+         "AssociatedUserUPNs" : null,
+         "CatalogId" : "11c5298e-4516-4c1b-b83a-efb219009b71",
+         "ControllerDnsName" : "A21828-21-1.prodcp5.local",
+         "CreatedDate" : "2020-06-10T14:31:36.183Z",
+         "CurrentLoadIndexId" : 16435979,
+         "CurrentPowerState" : 3,
+         "CurrentRegistrationState" : 1,
+         "CurrentSessionCount" : 0,
+         "DesktopGroupId" : "ad9e2d3d-44ac-49b0-a34b-7affb5ce3596",
+         "DnsName" : null,
+         "FailureDate" : null,
+         "FaultState" : 1,
+         "FunctionalLevel" : 9,
+         "Hash" : "",
+         "HostedMachineId" : "ccf63697-723c-0845-17fe-ebe1e2e75d31",
+         "HostedMachineName" : null,
+         "HostingServerName" : null,
+         "HypervisorId" : "56ac3d9f-2691-4d2c-aacb-95726611fe79",
+         "IPAddress" : null,
+         "Id" : "17f8b8f5-0f27-4852-a399-00194801a283",
+         "IsAssigned" : false,
+         "IsInMaintenanceMode" : false,
+         "IsPendingUpdate" : false,
+         "IsPreparing" : false,
+         "LastDeregisteredCode" : 0,
+         "LastDeregisteredDate" : "2023-06-06T22:25:31.473Z",
+         "LifecycleState" : 1,
+         "MachineRole" : 0,
+         "ModifiedDate" : "2023-06-26T09:12:40.223Z",
+         "Name" : null,
+         "OSType" : "Windows 2019",
+         "PowerStateChangeDate" : "2023-06-20T23:23:46.433Z",
+         "PoweredOnDate" : "2023-06-07T10:04:40.86Z",
+         "RegistrationStateChangeDate" : "2023-06-14T14:23:32.937Z",
+         "Sid" : "S-1-5-21-1924580635-3864722089-3907235813-107439",
+         "WindowsConnectionSetting" : 0
+      },
+      …
+
+2) Terminated Sessions in a time range
+
+Request
+curl --location --request GET 'https://[[REDACTED]]/Citrix/Monitor/OData/v4/Data/Sessions' --data-urlencode "$filter=ConnectionState ne 3 or FailureDate gt 2020-12-04T15:08:25.000Z"  --ntlm -u 'DOMAIN\YOUR_USERNAME:YOUR_PASSWORD'
+
+Response
+	{
+   "@odata.context" : "https://[[REDACTED]]/Citrix/Monitor/OData/v4/Data/$metadata#Sessions",
+   "@odata.nextLink" : "https://[[REDACTED]]/Citrix/Monitor/OData/v4/Data/Sessions?$skip=100",
+   "value" : [
+      {
+         "ConnectionState" : 3,
+         "ConnectionStateChangeDate" : "2023-04-06T01:17:33.02Z",
+         "CreatedDate" : "2023-04-06T01:17:33.02Z",
+         "CurrentConnectionId" : 562132,
+         "EndDate" : "2023-04-06T01:17:33.02Z",
+         "ExitCode" : 7,
+         "FailureDate" : "2023-04-06T01:17:33.02Z",
+         "FailureId" : 5,
+         "IsAnonymous" : false,
+         "LifecycleState" : 3,
+         "LogOnDuration" : null,
+         "MachineId" : "5cbddab2-25bd-4515-b93b-8928c7779712",
+         "ModifiedDate" : "2023-04-06T01:17:33.02Z",
+         "SessionIdleTime" : null,
+         "SessionKey" : "6afd72b5-054d-43d8-b9ef-000812fbdfcd",
+         "SessionType" : 1,
+         "StartDate" : "2023-04-06T01:17:33.02Z",
+         "UserId" : 4470
+      },
+      …
+
+3) Active Applications
+
+Request
+curl --location --request GET 'https://[[REDACTED]]/Citrix/Monitor/OData/v4/Data/Applications' --data-urlencode "$filter=LifecycleState eq 0"  --data-urlencode "$count=true" --ntlm -u 'DOMAIN\YOUR_USERNAME:YOUR_PASSWORD'
+
+Response
+{
+   "@odata.context" : "https://[[REDACTED]]/Citrix/Monitor/OData/v4/Data/$metadata#Applications",
+   "value" : [
+      {
+         "AdminFolder" : "",
+         "ApplicationType" : 0,
+         "BrowserName" : "MyCigna",
+         "CreatedDate" : "2018-12-11T19:56:18.177Z",
+         "Enabled" : false,
+         "Id" : "88040e8b-8b62-4cde-bc2c-014d87518191",
+         "LifecycleState" : 0,
+         "ModifiedDate" : "2018-12-11T19:56:18.177Z",
+         "Name" : "MyCigna",
+         "Path" : "C:\\Program Files (x86)\\Norskale\\Norskale Agent Host\\VUEMAppCmd.exe",
+         "PublishedName" : "MyCigna"
+      },
+      …
+
+4) Users with high logon duration (ADVANCED)
+
+Request
+curl --location --request GET 'https://[[REDACTED]]/Citrix/Monitor/OData/v4/Data/Sessions' --data-urlencode "$filter=StartDate gt 2020-03-01 and LogonDuration gt 20000"  --data-urlencode "$expand=Machine($select=Name;$expand=DesktopGroup($select=Name)),User($select=FullName)&$select=StartDate,LogonDuration" --data-urlencode "orderby=LogOnDuration desc" --ntlm -u 'DOMAIN\YOUR_USERNAME:YOUR_PASSWORD'
+
+Response
+{
+   "@odata.context" : "https://[[REDACTED]]/Citrix/Monitor/OData/v4/Data/$metadata#Sessions",
+   "@odata.nextLink" : "https://[[REDACTED]]/Citrix/Monitor/OData/v4/Data/Sessions?$skip=100",
+   "value" : [
+      {
+         "ConnectionState" : 3,
+         "ConnectionStateChangeDate" : "2023-04-06T01:17:33.02Z",
+         "CreatedDate" : "2023-04-06T01:17:33.02Z",
+         "CurrentConnectionId" : 562132,
+         "EndDate" : "2023-04-06T01:17:33.02Z",
+         "ExitCode" : 7,
+         "FailureDate" : "2023-04-06T01:17:33.02Z",
+         "FailureId" : 5,
+         "IsAnonymous" : false,
+         "LifecycleState" : 3,
+         "LogOnDuration" : null,
+         "MachineId" : "5cbddab2-25bd-4515-b93b-8928c7779712",
+         "ModifiedDate" : "2023-04-06T01:17:33.02Z",
+         "SessionIdleTime" : null,
+         "SessionKey" : "6afd72b5-054d-43d8-b9ef-000812fbdfcd",
+         "SessionType" : 1,
+         "StartDate" : "2023-04-06T01:17:33.02Z",
+         "UserId" : 4470
+      },
+      …
+
+
