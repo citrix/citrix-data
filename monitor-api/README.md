@@ -43,27 +43,29 @@ Authentication onPrem : Odata Oprem uses NTLM authentication mechanism. Username
 
 ![application instance summary](./_img/AppInstSum.png)
 
+# Postman examples
+There are 2 ways to access the Postman examples for Monitor API.
+
+## 1. Via Postman Public Workspace
+[Here](https://www.postman.com/citrix-data-access/workspace/citrix-data-public-workspace)
+
+## 2. Importing collection and environments
+| S.No | Description | Collection | Environment | Comments |
+| ---- | ---- | ---- | ---- | ---- |
+| 1. | On-Prem Demo | [link](./postman/Demo_OnPrem.postman_collection.json) | [link](./postman/Demo_OnPrem.postman_environment.json) | |
+| 2. | Cloud Demo | [link](./postman/Demo_DaaS.postman_collection.json) | [link](./postman/Demo_DaaS.postman_environment.json) | |
+
+
 # Useful links
 
-OData syntax: http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs01/odata-data-aggregation-ext-v4.0-cs01.html
+1. [OData syntax](http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs01/odata-data-aggregation-ext-v4.0-cs01.html)
 
+2. [Monitor Data Model](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/current-release/api-reference/monitor-model.html)
 
-Monitor Data Model:
-https://developer-docs.citrix.com/en-us/monitor-service-odata-api/current-release/api-reference/monitor-model.html
+3. [Monitor Data Schema](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/downloads/api-schema.pdf)
 
+4. [Monitor API details(Onprem)](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/current-release/)
 
-Monitor Data Schema: 
-https://developer-docs.citrix.com/en-us/monitor-service-odata-api/downloads/api-schema.pdf
+5. [Accessing Monitor API in Cloud](https://developer.cloud.com/citrixworkspace/citrix-daas/accessing-monitor-service-data-in-citrix-cloud/docs/overview)
 
-
-Monitor API details(Onprem):
-https://developer-docs.citrix.com/en-us/monitor-service-odata-api/current-release/
-
-
-Accessing Monitor API in Cloud:
-https://developer.cloud.com/citrixworkspace/citrix-daas/accessing-monitor-service-data-in-citrix-cloud/docs/overview
-
-
-Authentication in Cloud:
-https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis
-
+6. [Authentication in Cloud](https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis)
