@@ -43,10 +43,13 @@ Authentication onPrem : Odata Oprem uses NTLM authentication mechanism. Username
 
 ![application instance summary](./_img/AppInstSum.png)
 
+# Powershell examples
+[Here](./powershell/Demo_OnPrem.ps1)
+
 # Postman examples
 There are 2 ways to access the Postman examples for Monitor API.
 
-## 1. Via Postman Public Workspace
+## 1. Via Postman public workspace
 [Here](https://www.postman.com/citrix-data-access/workspace/citrix-data-public-workspace)
 
 ## 2. Importing collection and environments
@@ -55,6 +58,8 @@ There are 2 ways to access the Postman examples for Monitor API.
 | 1. | On-Prem Demo | [link](./postman/Demo_OnPrem.postman_collection.json) | [link](./postman/Demo_OnPrem.postman_environment.json) | |
 | 2. | Cloud Demo | [link](./postman/Demo_DaaS.postman_collection.json) | [link](./postman/Demo_DaaS.postman_environment.json) | |
 
+# Curl examples
+[Here](./curl/Demo_OnPrem.txt)
 
 # Useful links
 
