@@ -14,7 +14,7 @@ The examples cover a wide variety of consumers / clients to suit the different t
 The goal is to keep adding more content here over time to increase the value and appeal to consumers of Citrix data.
 
 # Contents
-| S.No | Component | Scenario | Environment | Interface | Clients | Level | Link |
-| ---- | ---- | ---- | ---- | ---- | --- | --- | --- |
-| 1. | Monitor | Troubleshooting/Helpdesk  | On-Prem, Cloud | Pull (OData) |  Powershell, Curl, Postman | Basic, Intermediate | [here](./monitor-api) | 
-| 2. | TBD |  |  | |  | |
+| S.No | Component | Scenario | Environment | Interface | Clients | Level | 
+| ---- | ---- | ---- | ---- | ---- | --- | --- | 
+| 1. | [Monitor](./monitor-api) | Troubleshooting/Helpdesk  | On-Prem, Cloud | Pull (OData) |  Powershell, Curl, Postman | Basic, Intermediate | 
+| 2. | TBD |  |  | |  | 
