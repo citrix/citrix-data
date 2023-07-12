@@ -1,10 +1,10 @@
 # Background
 
-This public repository is intended to be one stop solution for learning about APIs related to Citrix stack data. This repo aims to cover data/APIs for all types of: 
+This public repository is intended to be one stop solution for learning about APIs related to Citrix stack data. It aims to cover data/APIs for all types of: 
 - interfaces (pull / push)
 - underlying components (monitor / analytics) 
 - deployment modes (on-prem / cloud / hybrid)
-- focus areas (performance / security)
+- focus areas (monitoring / performance / security)
 - complexity (basic / intermediate / advanced)
 
 The approach taken is use-case and example driven so that consumers can quickly get to the outcome (data) they need to with minimal effort by copy pasting working/tested snippets. 
