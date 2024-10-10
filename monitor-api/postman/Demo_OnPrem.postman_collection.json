@@ -2,147 +2,1094 @@
 	"info": {
 		"_postman_id": "d1fb131a-d4ea-4edd-9082-38baf55638f7",
 		"name": "Monitor API - OnPrem Demo",
-		"description": "# Background\n\nThe collection shows how to use Citrix Monitor APIs to collect, analyze, and categorize data from the CVAD (OnPrem).\n\nThe examples walkthrough the CVAD dataset that is available through API and give hands-on experience on how to play around with the data from CVAD environment.\n\n# Benefits\n\nBy learning to use the API customer admins can:\n\n1. Create a single pane of glass for the Citrix stack data\n2. Build their own monitoring and troubleshooting dashboards for both admins and helpdesk.\n3. Build Integration with 3rd-party systems or data lake for observability or reporting on VDI usage.\n    \n\n# Environment (Demo_OnPrem)\n\n## OnPrem\n\n**URI:** https://{DeliveryController}/Citrix/Monitor/OData/v4/Data/\n\n**Authentication:** Oprem uses **NTLM authentication**. Username and password need to be set along with right set of permissions on the CVAD environment.\n\n# References\n\n1. [https://developer-docs.citrix.com/en-us/monitor-service-odata-api/current-release/](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/current-release/)\n2. [https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis](https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis)",
+		"description": "# Background\n\nThe collection shows how to use Citrix Monitor APIs to collect, analyze, and categorize data from the CVAD (OnPrem).\n\nThe examples walkthrough the CVAD dataset that is available through API and give hands-on experience on how to play around with the data from CVAD environment.\n\n# Benefits\n\nBy learning to use the API customer admins can:\n\n1. Create a single pane of glass for the Citrix stack data\n    \n2. Build their own monitoring and troubleshooting dashboards for both admins and helpdesk.\n    \n3. Build Integration with 3rd-party systems or data lake for observability or reporting on VDI usage.\n    \n\n# Environment (Demo_OnPrem)\n\n## OnPrem\n\n**URI:** https://{DeliveryController}/Citrix/Monitor/OData/v4/Data/\n\n**Authentication:** OnPrem uses **NTLM authentication**. Username and password need to be set along with right set of permissions on the CVAD environment.\n\n# References\n\n1. [https://developer-docs.citrix.com/en-us/monitor-service-odata-api/](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/)\n    \n2. [https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis](https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "28116645",
-		"_collection_link": "https://www.postman.com/citrix-data-access/workspace/citrix-data-public-workspace/collection/27876429-d1fb131a-d4ea-4edd-9082-38baf55638f7?action=share&creator=28116645&source=collection_link"
+		"_exporter_id": "38479972",
+		"_collection_link": "https://www.postman.com/citrix-data-access/citrix-data-public-workspace/collection/dv5b4mx/monitor-api-onprem-demo?action=share&source=collection_link&creator=38479972"
 	},
 	"item": [
 		{
-			"name": "Active machines with count",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Machines?$filter=LifecycleState eq 0&$count=true",
-					"host": [
-						"{{baseurl}}"
-					],
-					"path": [
-						"Citrix",
-						"Monitor",
-						"OData",
-						"v4",
-						"Data",
-						"Machines"
-					],
-					"query": [
-						{
-							"key": "$filter",
-							"value": "LifecycleState eq 0"
+			"name": "Machine",
+			"item": [
+				{
+					"name": "Active machines with count",
+					"request": {
+						"auth": {
+							"type": "noauth"
 						},
-						{
-							"key": "$count",
-							"value": "true"
-						}
-					]
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Machines?$filter=LifecycleState eq 0&$count=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "LifecycleState eq 0"
+								},
+								{
+									"key": "$count",
+									"value": "true"
+								}
+							]
+						},
+						"description": "- Use `/Machines` resource\n    \n- `LifecycleState` value `0` represents `Active` machines\n    \n- `$count=true` parameter returns count in response"
+					},
+					"response": []
 				},
-				"description": "- Use **/Machines** resource\n- LifecycleState value **0** represents **Active** machines\n- **$count=true** parameter returns count in response"
-			},
-			"response": []
+				{
+					"name": "Machines in failure state",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Machines?null=null&$filter=FailureDate ne null and FailureDate ge 2024-07-30T00:00:00Z",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "null",
+									"value": "null"
+								},
+								{
+									"key": "$filter",
+									"value": "FailureDate ne null and FailureDate ge 2024-07-30T00:00:00Z"
+								}
+							]
+						},
+						"description": "- `FailureDate is null` represents the machine is not in a failure state.\n    \n- `FailureDate ne null` represents the machine is in a failure state.\n    \n- \\`FailureDate ge {{yesterday00}}\\` in `$filter` operation to get the machines in a failure state after yesterday, the time stamp in format`2024-07-30T00:00:00Z`"
+					},
+					"response": []
+				},
+				{
+					"name": "MachineFailure details",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Machines?$filter=FailureDate ne null and FailureDate ge 2024-07-30T00:00:00Z&$select=Id&$expand=MachineFailures($filter=FailureStartDate ge 2024-07-30T00:00:00Z)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "FailureDate ne null and FailureDate ge 2024-07-30T00:00:00Z"
+								},
+								{
+									"key": "$select",
+									"value": "Id"
+								},
+								{
+									"key": "$expand",
+									"value": "MachineFailures($filter=FailureStartDate ge 2024-07-30T00:00:00Z)"
+								}
+							]
+						},
+						"description": "- Use `$expand` operation to get the details of MachineFailures"
+					},
+					"response": []
+				},
+				{
+					"name": "Alive sessions on each machine",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Machines?$select=Name,IsInMaintenanceMode,CurrentRegistrationState,CurrentSessionCount,IsPreparing,FaultState&$expand=DesktopGroup($select=Id,Name),Sessions($select=SessionKey,ConnectionState;$filter=EndDate+eq+null)&$filter=Name+ne+null+and+DesktopGroup+ne+null",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "Name,IsInMaintenanceMode,CurrentRegistrationState,CurrentSessionCount,IsPreparing,FaultState"
+								},
+								{
+									"key": "$expand",
+									"value": "DesktopGroup($select=Id,Name),Sessions($select=SessionKey,ConnectionState;$filter=EndDate+eq+null)"
+								},
+								{
+									"key": "$filter",
+									"value": "Name+ne+null+and+DesktopGroup+ne+null"
+								}
+							]
+						},
+						"description": "- `Sessions` in `$expand` operation to get the sessions on this machine.\n- `EndDate eq null` represents the session is still alive."
+					},
+					"response": []
+				},
+				{
+					"name": "Active VDA machines associated information",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Machines?$filter=LifecycleState eq 0 and Name ne null and DnsName ne '' and CatalogId ne null and MachineRole eq 0&$expand=CurrentLoadIndex,Catalog,Hypervisor",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "LifecycleState eq 0 and Name ne null and DnsName ne '' and CatalogId ne null and MachineRole eq 0"
+								},
+								{
+									"key": "$expand",
+									"value": "CurrentLoadIndex,Catalog,Hypervisor"
+								}
+							]
+						},
+						"description": "- `LifecycleState eq 0` represents active machines.\n- `MachineRole eq 0` represents a VDA machine.\n- Use `$expand` to get associated information."
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity machine."
 		},
 		{
-			"name": "Active applications with count",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Applications?$filter=LifecycleState eq 0&$count=true",
-					"host": [
-						"{{baseurl}}"
-					],
-					"path": [
-						"Citrix",
-						"Monitor",
-						"OData",
-						"v4",
-						"Data",
-						"Applications"
-					],
-					"query": [
-						{
-							"key": "$filter",
-							"value": "LifecycleState eq 0"
+			"name": "CPU and memory usage",
+			"item": [
+				{
+					"name": "Poweron machines CPU and memory usage in hourly level",
+					"request": {
+						"auth": {
+							"type": "noauth"
 						},
-						{
-							"key": "$count",
-							"value": "true"
-						}
-					]
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ResourceUtilizationSummary?$filter=Granularity eq 60 and SummaryDate eq 2024-07-30T08:00:00Z and UptimeInMinutes gt 0",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"ResourceUtilizationSummary"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "Granularity eq 60 and SummaryDate eq 2024-07-30T08:00:00Z and UptimeInMinutes gt 0"
+								}
+							]
+						},
+						"description": "- `Granularity = 60` represents hourly level metrics.\n- `UptimeInMinutes > 0` represents the machine powered on in this hour."
+					},
+					"response": []
 				},
-				"description": "- Use **/Applications** resource\n- LifecycleState value **0** represents **Active** applications\n- **$count=true** parameter returns count in response"
-			},
-			"response": []
+				{
+					"name": "Poweron machines CPU and memory usage in day level",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ResourceUtilizationSummary?$filter=Granularity eq 1440 and SummaryDate eq 2024-07-30T00:00:00Z and UptimeInMinutes gt 0",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"ResourceUtilizationSummary"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "Granularity eq 1440 and SummaryDate eq 2024-07-30T00:00:00Z and UptimeInMinutes gt 0"
+								}
+							]
+						},
+						"description": "- `Granularity = 1440` represents day level metrics.\n- `UptimeInMinutes > 0` represents the machine powered on in this day."
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for machine level CPU and memory usage."
 		},
 		{
-			"name": "Terminated sessions in a time range",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$filter=ConnectionState ne 3 or FailureDate gt 2020-12-04T15:08:25.000Z",
-					"host": [
-						"{{baseurl}}"
-					],
-					"path": [
-						"Citrix",
-						"Monitor",
-						"OData",
-						"v4",
-						"Data",
-						"Sessions"
-					],
-					"query": [
-						{
-							"key": "$filter",
-							"value": "ConnectionState ne 3 or FailureDate gt 2020-12-04T15:08:25.000Z"
-						}
-					]
+			"name": "Session",
+			"item": [
+				{
+					"name": "ApplicationInstances for active sessions",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$expand=ApplicationInstances&$filter=(ConnectionState eq 5) and (ModifiedDate gt 2024-08-06T07:00:00Z and ModifiedDate le 2024-08-06T07:10:00Z )",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "ApplicationInstances"
+								},
+								{
+									"key": "$filter",
+									"value": "(ConnectionState eq 5) and (ModifiedDate gt 2024-08-06T07:00:00Z and ModifiedDate le 2024-08-06T07:10:00Z )"
+								}
+							]
+						},
+						"description": "- `ConnectionState eq 5` represents the connection state of this session is active.\n- `ModifiedDate` represents the target time range."
+					},
+					"response": []
 				},
-				"description": "- Use **/Sessions** resource\n- ConnectionState ne **3** represents **terminated** sessions\n- FailureDate gt 2020-12-04T15:08:25.000Z gets failures after the mentioned timestamp"
-			},
-			"response": []
+				{
+					"name": "Connection and machine information of each session",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$select=StartDate,LogOnDuration,EndDate&$expand=Machine($select=DesktopGroupId),Connections($select=LogOnStartDate,LogOnEndDate,BrokeringDuration,VMStartStartDate,VMStartEndDate,HdxStartDate,HdxEndDate,AuthenticationDuration,GpoStartDate,GpoEndDate,LogOnScriptsStartDate,LogOnScriptsEndDate,ProfileLoadStartDate,ProfileLoadEndDate,InteractiveStartDate,InteractiveEndDate;$filter=IsReconnect+eq+false)&$filter=LogOnDuration+ne+null+and+StartDate+gt+cast(2024-07-31T02:56:57.996Z,+Edm.DateTimeOffset)&$orderby=StartDate+desc",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "StartDate,LogOnDuration,EndDate"
+								},
+								{
+									"key": "$expand",
+									"value": "Machine($select=DesktopGroupId),Connections($select=LogOnStartDate,LogOnEndDate,BrokeringDuration,VMStartStartDate,VMStartEndDate,HdxStartDate,HdxEndDate,AuthenticationDuration,GpoStartDate,GpoEndDate,LogOnScriptsStartDate,LogOnScriptsEndDate,ProfileLoadStartDate,ProfileLoadEndDate,InteractiveStartDate,InteractiveEndDate;$filter=IsReconnect+eq+false)"
+								},
+								{
+									"key": "$filter",
+									"value": "LogOnDuration+ne+null+and+StartDate+gt+cast(2024-07-31T02:56:57.996Z,+Edm.DateTimeOffset)"
+								},
+								{
+									"key": "$orderby",
+									"value": "StartDate+desc"
+								}
+							]
+						},
+						"description": "- Connection represents an initial connection or reconnect for a session.\n- Use `$expand` operation to get the connection state for each session."
+					},
+					"response": []
+				},
+				{
+					"name": "SessionMetrics for alive sessions",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$filter=EndDate eq null &$select=StartDate,ConnectionState,SessionIdleTime&$expand=SessionMetrics($select=IcaRttMS),Machine($expand=DesktopGroup($select=Name)),Machine($select=Name),User($select=UserName),CurrentConnection($select=ClientName,ClientVersion,ClientAddress,ConnectedViaIPAddress,BrokeringDuration)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "EndDate eq null "
+								},
+								{
+									"key": "$select",
+									"value": "StartDate,ConnectionState,SessionIdleTime"
+								},
+								{
+									"key": "$expand",
+									"value": "SessionMetrics($select=IcaRttMS),Machine($expand=DesktopGroup($select=Name)),Machine($select=Name),User($select=UserName),CurrentConnection($select=ClientName,ClientVersion,ClientAddress,ConnectedViaIPAddress,BrokeringDuration)"
+								}
+							]
+						},
+						"description": "- `EndDate is null` represents alive session.\n- Use `$expand=SessionMetrics` to get the metrics of each session."
+					},
+					"response": []
+				},
+				{
+					"name": "Alive sessions for target DesktopGroup",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$expand=Machine($expand=DesktopGroup)&$filter=(Machine/DesktopGroup/Id eq ad9e2d3d-44ac-49b0-a34b-7affb5ce3596) and (EndDate eq null)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "Machine($expand=DesktopGroup)"
+								},
+								{
+									"key": "$filter",
+									"value": "(Machine/DesktopGroup/Id eq ad9e2d3d-44ac-49b0-a34b-7affb5ce3596) and (EndDate eq null)"
+								}
+							]
+						},
+						"description": "- `Machine/DesktopGroup/Id eq ad9e2d3d-44ac-49b0-a34b-7affb5ce3596` represents the target desktopgroup.\n- `EndDate eq null` represent the alive session."
+					},
+					"response": []
+				},
+				{
+					"name": "Terminated sessions in a time range",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$filter=ConnectionState ne 3 or FailureDate gt 2020-12-04T15:08:25.000Z",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "ConnectionState ne 3 or FailureDate gt 2020-12-04T15:08:25.000Z"
+								}
+							]
+						},
+						"description": "- `ConnectionState ne 3` represents terminated sessions\n    \n- `FailureDate gt` gets failures after the mentioned timestamp"
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity session."
 		},
 		{
-			"name": "Users with high logon duration",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$filter=StartDate gt 2020-03-01 and LogonDuration gt 20000 &$expand=Machine($select=Name;$expand=DesktopGroup($select=Name)),User($select=FullName)&$select=StartDate,LogonDuration&orderby=LogOnDuration desc",
-					"host": [
-						"{{baseurl}}"
-					],
-					"path": [
-						"Citrix",
-						"Monitor",
-						"OData",
-						"v4",
-						"Data",
-						"Sessions"
-					],
-					"query": [
-						{
-							"key": "$filter",
-							"value": "StartDate gt 2020-03-01 and LogonDuration gt 20000 "
+			"name": "ApplicationInstance",
+			"item": [
+				{
+					"name": "ApplicationInstances for non-terminated sessions",
+					"request": {
+						"auth": {
+							"type": "noauth"
 						},
-						{
-							"key": "$expand",
-							"value": "Machine($select=Name;$expand=DesktopGroup($select=Name)),User($select=FullName)"
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ApplicationInstances?$filter=EndDate eq null and Session/ConnectionState ne 3",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"ApplicationInstances"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "EndDate eq null and Session/ConnectionState ne 3"
+								}
+							]
 						},
-						{
-							"key": "$select",
-							"value": "StartDate,LogonDuration"
-						},
-						{
-							"key": "orderby",
-							"value": "LogOnDuration desc"
-						}
-					]
+						"description": "- `EndDate is null` and `ConnectionState!=3` represents non-terminated sessions."
+					},
+					"response": []
 				},
-				"description": "- Use **/Sessions** resource\n- StartDate gt 2020-03-01 selects sessions started after the timestamp\n- LogonDuration gt 20000 selects users with logon duration greater than 20 seconds\n- $expand=Machine($select=Name;$expand=DesktopGroup($select=Name)) adds machine details\n- User($select=FullName)&$select=StartDate,LogonDuration adds user details\n- orderby=LogOnDuration desc sorts the results in descending order"
-			},
-			"response": []
+				{
+					"name": "ApplicationInstances for target application with Machine and User information",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ApplicationInstances?$apply=filter(ApplicationId eq 6b07220e-b7d2-4f8d-9e43-49bd85222553 and EndDate eq null)&$expand=Session($expand=Machine,User)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"ApplicationInstances"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(ApplicationId eq 6b07220e-b7d2-4f8d-9e43-49bd85222553 and EndDate eq null)"
+								},
+								{
+									"key": "$expand",
+									"value": "Session($expand=Machine,User)"
+								}
+							]
+						},
+						"description": "- Use `filter` operation to get the details for target application.\n- Use `expand` operation to get the related Machine and User Information."
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity ApplicationInstance."
+		},
+		{
+			"name": "Application",
+			"item": [
+				{
+					"name": "Active applications with count",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Applications?$filter=LifecycleState eq 0&$count=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Applications"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "LifecycleState eq 0"
+								},
+								{
+									"key": "$count",
+									"value": "true"
+								}
+							]
+						},
+						"description": "- `LifecycleState eq 0` represents Active applications\n- `$count=true` parameter returns count in response"
+					},
+					"response": []
+				},
+				{
+					"name": "DesktopGroup Id with active application",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Applications?$filter=LifecycleState eq 0&$expand=DesktopGroups($select=Id)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Applications"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "LifecycleState eq 0"
+								},
+								{
+									"key": "$expand",
+									"value": "DesktopGroups($select=Id)"
+								}
+							]
+						},
+						"description": "- `LifecycleState=0` represents the active application."
+					},
+					"response": []
+				},
+				{
+					"name": "Count by ApplicationType",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Applications?$apply=groupby((ApplicationType), aggregate(NAme with countdistinct as NumberofApplications))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Applications"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "groupby((ApplicationType), aggregate(NAme with countdistinct as NumberofApplications))"
+								}
+							]
+						},
+						"description": "- Use `groupby` operation to get the  count group by ApplicationType."
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity application."
+		},
+		{
+			"name": "Connections",
+			"item": [
+				{
+					"name": "Connection details for sessions with failure",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Connections?$filter=Session/FailureDate ge 2024-07-24T00:00:00.000Z and Session/FailureDate le 2024-07-25T00:00:00.000Z &$select=*,&$expand=Session($select=*;$expand=User($select=UPN,UserName),Failure($select=ConnectionFailureEnumValue,Category),Machine($select=DnsName,DesktopGroupId,IsInMaintenanceMode))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Connections"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "Session/FailureDate ge 2024-07-24T00:00:00.000Z and Session/FailureDate le 2024-07-25T00:00:00.000Z "
+								},
+								{
+									"key": "$select",
+									"value": "*,"
+								},
+								{
+									"key": "$expand",
+									"value": "Session($select=*;$expand=User($select=UPN,UserName),Failure($select=ConnectionFailureEnumValue,Category),Machine($select=DnsName,DesktopGroupId,IsInMaintenanceMode))"
+								}
+							]
+						},
+						"description": "- Use `$expand` operation to get the details for sessions with failure"
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity Connections."
+		},
+		{
+			"name": "ConnectionFailureLogs",
+			"item": [
+				{
+					"name": "ConnectionFailureLogs related Machine, Session and User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ConnectionFailureLogs?$filter=(FailureDate ge 2024-07-31T00:00:00Z)&$expand=Machine($select=Name,CurrentRegistrationState,IsInMaintenanceMode),User($select=Sid,Upn,UserName,Domain),Session",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"ConnectionFailureLogs"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "(FailureDate ge 2024-07-31T00:00:00Z)"
+								},
+								{
+									"key": "$expand",
+									"value": "Machine($select=Name,CurrentRegistrationState,IsInMaintenanceMode),User($select=Sid,Upn,UserName,Domain),Session"
+								}
+							]
+						},
+						"description": "- With `$expand` operation, to get the related Machine, Session and User details for ConnectionFailureLogs.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "ConnectionFailureLogs for target time",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ConnectionFailureLogs?$filter=(FailureDate ge 2024-07-30T00:00:00Z and FailureDate le 2024-07-31T00:00:00Z)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"ConnectionFailureLogs"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "(FailureDate ge 2024-07-30T00:00:00Z and FailureDate le 2024-07-31T00:00:00Z)"
+								}
+							]
+						},
+						"description": "- `$filter=(FailureDate ge 2024-07-30T00:00:00Z and FailureDate le 2024-07-31T00:00:00Z)` represents the target time range.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Count by ConnectionFailureEnumValue",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ConnectionFailureLogs?$apply=filter(CreatedDate gt 2024-07-01T00:00:00.00Z )/groupby((ConnectionFailureEnumValue), aggregate(id with countdistinct as FailureCount))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"ConnectionFailureLogs"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(CreatedDate gt 2024-07-01T00:00:00.00Z )/groupby((ConnectionFailureEnumValue), aggregate(id with countdistinct as FailureCount))"
+								}
+							]
+						},
+						"description": "- With `groupby` and `aggregate` operations, can get the ConnectionFailureLogs count groupby ConnectionFailureEnumValue."
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity ConnectionFailureLogs."
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Users with high logon duration",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$filter=StartDate gt 2020-03-01 and LogonDuration gt 20000 &$expand=Machine($select=Name;$expand=DesktopGroup($select=Name)),User($select=FullName)&$select=StartDate,LogonDuration&orderby=LogOnDuration desc",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "StartDate gt 2020-03-01 and LogonDuration gt 20000 "
+								},
+								{
+									"key": "$expand",
+									"value": "Machine($select=Name;$expand=DesktopGroup($select=Name)),User($select=FullName)"
+								},
+								{
+									"key": "$select",
+									"value": "StartDate,LogonDuration"
+								},
+								{
+									"key": "orderby",
+									"value": "LogOnDuration desc"
+								}
+							]
+						},
+						"description": "- `StartDate gt 2020-03-01` selects sessions started after the timestamp\n- `LogonDuration gt 20000` selects users with logon duration greater than 20 seconds\n- `$expand=Machine($select=Name;$expand=DesktopGroup($select=Name))` adds machine details\n- `User($select=FullName)&$select=StartDate,LogonDuration` adds user details\n- `orderby=LogOnDuration` desc sorts the results in descending order"
+					},
+					"response": []
+				},
+				{
+					"name": "Users of target domain",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "CWSAuth bearer={{token}}"
+							},
+							{
+								"key": "Citrix-CustomerId",
+								"value": "{{customer}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Users?$filter=Domain eq 'CITRITE'",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Citrix",
+								"Monitor",
+								"OData",
+								"v4",
+								"Data",
+								"Users"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "Domain eq 'CITRITE'"
+								}
+							]
+						},
+						"description": "- `Domain eq 'CITRITE'` represents the target domian."
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity user."
 		},
 		{
 			"name": "Metadata",

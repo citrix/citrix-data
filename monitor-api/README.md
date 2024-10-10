@@ -19,30 +19,6 @@ Authentication on Cloud : Odata API on cloud uses bearer token for authenticatio
 
 Authentication onPrem : Odata Oprem uses NTLM authentication mechanism. Username and password with right set of permissions on CVAD environment will help in executing the API.
 
-# Data sets
-
-## Session related
-![session](./_img/Session.png)
-
-![session activity summary](./_img/SessionActSum.png)
-
-## Connection related
-![connection](./_img/Connection.png)
-
-![desktop group](./_img/DesktopGroup.png)
-
-## Machine related
-![machine](./_img/Machine.png)
-
-![resource utilization](./_img/ResourceUtil.png)
-
-## Application related
-![application](./_img/Application.png)
-
-![application instance](./_img/AppInstance.png)
-
-![application instance summary](./_img/AppInstSum.png)
-
 # Powershell examples
 [Here](./powershell/Demo_OnPrem.ps1)
 
@@ -65,12 +41,10 @@ There are 2 ways to access the Postman examples for Monitor API.
 
 1. [OData syntax](http://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs01/odata-data-aggregation-ext-v4.0-cs01.html)
 
-2. [Monitor Data Model](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/current-release/api-reference/monitor-model.html)
+2. [Monitor Data Model](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/apis)
 
-3. [Monitor Data Schema](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/downloads/api-schema.pdf)
+3. [Monitor API details(Onprem)](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/on-prem-odata)
 
-4. [Monitor API details(Onprem)](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/current-release/)
+4. [Accessing Monitor API in Cloud](https://developer.cloud.com/citrixworkspace/citrix-daas/accessing-monitor-service-data-in-citrix-cloud/docs/overview)
 
-5. [Accessing Monitor API in Cloud](https://developer.cloud.com/citrixworkspace/citrix-daas/accessing-monitor-service-data-in-citrix-cloud/docs/overview)
-
-6. [Authentication in Cloud](https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis)
+5. [Authentication in Cloud](https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis)
