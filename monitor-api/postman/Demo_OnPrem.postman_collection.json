@@ -1,11 +1,11 @@
 {
 	"info": {
-		"_postman_id": "d1fb131a-d4ea-4edd-9082-38baf55638f7",
+		"_postman_id": "4d801a10-0261-452c-a1a3-9c5181d10c04",
 		"name": "Monitor API - OnPrem Demo",
-		"description": "# Background\n\nThe collection shows how to use Citrix Monitor APIs to collect, analyze, and categorize data from the CVAD (OnPrem).\n\nThe examples walkthrough the CVAD dataset that is available through API and give hands-on experience on how to play around with the data from CVAD environment.\n\n# Benefits\n\nBy learning to use the API customer admins can:\n\n1. Create a single pane of glass for the Citrix stack data\n    \n2. Build their own monitoring and troubleshooting dashboards for both admins and helpdesk.\n    \n3. Build Integration with 3rd-party systems or data lake for observability or reporting on VDI usage.\n    \n\n# Environment (Demo_OnPrem)\n\n## OnPrem\n\n**URI:** https://{DeliveryController}/Citrix/Monitor/OData/v4/Data/\n\n**Authentication:** OnPrem uses **NTLM authentication**. Username and password need to be set along with right set of permissions on the CVAD environment.\n\n# References\n\n1. [https://developer-docs.citrix.com/en-us/monitor-service-odata-api/](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/)\n    \n2. [https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis](https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis)",
+		"description": "# Background\n\nThe collection shows how to use Citrix Monitor APIs to collect, analyze, and categorize data from the CVAD (OnPrem).\n\nThe examples walkthrough the CVAD dataset that is available through API and give hands-on experience on how to play around with the data from CVAD environment.\n\n# Benefits\n\nBy learning to use the API customer admins can:\n\n1. Create a single pane of glass for the Citrix stack data\n    \n2. Build their own monitoring and troubleshooting dashboards for both admins and helpdesk.\n    \n3. Build Integration with 3rd-party systems or data lake for observability or reporting on VDI usage.\n    \n\n# Environment (Demo_OnPrem)\n\n## OnPrem\n\n**URI:** https://{DeliveryController}/Citrix/Monitor/OData/v4/Data/\n\n**Authentication:** OnPrem uses **NTLM authentication**. Username and password need to be set along with right set of permissions on the CVAD environment.\n\n# References\n\n1. [https://developer-docs.citrix.com/en-us/monitor-service-odata-api](https://developer-docs.citrix.com/en-us/monitor-service-odata-api)\n    \n2. [https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis](https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis)",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "38479972",
-		"_collection_link": "https://www.postman.com/citrix-data-access/citrix-data-public-workspace/collection/dv5b4mx/monitor-api-onprem-demo?action=share&source=collection_link&creator=38479972"
+		"_exporter_id": "31348146",
+		"_collection_link": "https://www.postman.com/monitor-odata-api/workspace/monitor-odata-api-dev/collection/31348146-4d801a10-0261-452c-a1a3-9c5181d10c04?action=share&source=collection_link&creator=31348146"
 	},
 	"item": [
 		{
@@ -15,19 +15,22 @@
 					"name": "Active machines with count",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Machines?$filter=LifecycleState eq 0&$count=true",
 							"host": [
@@ -60,19 +63,22 @@
 					"name": "Machines in failure state",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Machines?null=null&$filter=FailureDate ne null and FailureDate ge 2024-07-30T00:00:00Z",
 							"host": [
@@ -105,19 +111,22 @@
 					"name": "MachineFailure details",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Machines?$filter=FailureDate ne null and FailureDate ge 2024-07-30T00:00:00Z&$select=Id&$expand=MachineFailures($filter=FailureStartDate ge 2024-07-30T00:00:00Z)",
 							"host": [
@@ -154,19 +163,22 @@
 					"name": "Alive sessions on each machine",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Machines?$select=Name,IsInMaintenanceMode,CurrentRegistrationState,CurrentSessionCount,IsPreparing,FaultState&$expand=DesktopGroup($select=Id,Name),Sessions($select=SessionKey,ConnectionState;$filter=EndDate+eq+null)&$filter=Name+ne+null+and+DesktopGroup+ne+null",
 							"host": [
@@ -203,19 +215,22 @@
 					"name": "Active VDA machines associated information",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Machines?$filter=LifecycleState eq 0 and Name ne null and DnsName ne '' and CatalogId ne null and MachineRole eq 0&$expand=CurrentLoadIndex,Catalog,Hypervisor",
 							"host": [
@@ -254,19 +269,22 @@
 					"name": "Poweron machines CPU and memory usage in hourly level",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ResourceUtilizationSummary?$filter=Granularity eq 60 and SummaryDate eq 2024-07-30T08:00:00Z and UptimeInMinutes gt 0",
 							"host": [
@@ -295,19 +313,22 @@
 					"name": "Poweron machines CPU and memory usage in day level",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ResourceUtilizationSummary?$filter=Granularity eq 1440 and SummaryDate eq 2024-07-30T00:00:00Z and UptimeInMinutes gt 0",
 							"host": [
@@ -342,19 +363,22 @@
 					"name": "ApplicationInstances for active sessions",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$expand=ApplicationInstances&$filter=(ConnectionState eq 5) and (ModifiedDate gt 2024-08-06T07:00:00Z and ModifiedDate le 2024-08-06T07:10:00Z )",
 							"host": [
@@ -387,19 +411,22 @@
 					"name": "Connection and machine information of each session",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$select=StartDate,LogOnDuration,EndDate&$expand=Machine($select=DesktopGroupId),Connections($select=LogOnStartDate,LogOnEndDate,BrokeringDuration,VMStartStartDate,VMStartEndDate,HdxStartDate,HdxEndDate,AuthenticationDuration,GpoStartDate,GpoEndDate,LogOnScriptsStartDate,LogOnScriptsEndDate,ProfileLoadStartDate,ProfileLoadEndDate,InteractiveStartDate,InteractiveEndDate;$filter=IsReconnect+eq+false)&$filter=LogOnDuration+ne+null+and+StartDate+gt+cast(2024-07-31T02:56:57.996Z,+Edm.DateTimeOffset)&$orderby=StartDate+desc",
 							"host": [
@@ -440,19 +467,22 @@
 					"name": "SessionMetrics for alive sessions",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$filter=EndDate eq null &$select=StartDate,ConnectionState,SessionIdleTime&$expand=SessionMetrics($select=IcaRttMS),Machine($expand=DesktopGroup($select=Name)),Machine($select=Name),User($select=UserName),CurrentConnection($select=ClientName,ClientVersion,ClientAddress,ConnectedViaIPAddress,BrokeringDuration)",
 							"host": [
@@ -489,19 +519,22 @@
 					"name": "Alive sessions for target DesktopGroup",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$expand=Machine($expand=DesktopGroup)&$filter=(Machine/DesktopGroup/Id eq ad9e2d3d-44ac-49b0-a34b-7affb5ce3596) and (EndDate eq null)",
 							"host": [
@@ -534,19 +567,22 @@
 					"name": "Terminated sessions in a time range",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$filter=ConnectionState ne 3 or FailureDate gt 2020-12-04T15:08:25.000Z",
 							"host": [
@@ -581,19 +617,22 @@
 					"name": "ApplicationInstances for non-terminated sessions",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ApplicationInstances?$filter=EndDate eq null and Session/ConnectionState ne 3",
 							"host": [
@@ -622,19 +661,22 @@
 					"name": "ApplicationInstances for target application with Machine and User information",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ApplicationInstances?$apply=filter(ApplicationId eq 6b07220e-b7d2-4f8d-9e43-49bd85222553 and EndDate eq null)&$expand=Session($expand=Machine,User)",
 							"host": [
@@ -673,19 +715,22 @@
 					"name": "Active applications with count",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Applications?$filter=LifecycleState eq 0&$count=true",
 							"host": [
@@ -718,19 +763,22 @@
 					"name": "DesktopGroup Id with active application",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Applications?$filter=LifecycleState eq 0&$expand=DesktopGroups($select=Id)",
 							"host": [
@@ -763,19 +811,22 @@
 					"name": "Count by ApplicationType",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Applications?$apply=groupby((ApplicationType), aggregate(NAme with countdistinct as NumberofApplications))",
 							"host": [
@@ -810,19 +861,22 @@
 					"name": "Connection details for sessions with failure",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Connections?$filter=Session/FailureDate ge 2024-07-24T00:00:00.000Z and Session/FailureDate le 2024-07-25T00:00:00.000Z &$select=*,&$expand=Session($select=*;$expand=User($select=UPN,UserName),Failure($select=ConnectionFailureEnumValue,Category),Machine($select=DnsName,DesktopGroupId,IsInMaintenanceMode))",
 							"host": [
@@ -865,19 +919,22 @@
 					"name": "ConnectionFailureLogs related Machine, Session and User",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ConnectionFailureLogs?$filter=(FailureDate ge 2024-07-31T00:00:00Z)&$expand=Machine($select=Name,CurrentRegistrationState,IsInMaintenanceMode),User($select=Sid,Upn,UserName,Domain),Session",
 							"host": [
@@ -910,19 +967,22 @@
 					"name": "ConnectionFailureLogs for target time",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ConnectionFailureLogs?$filter=(FailureDate ge 2024-07-30T00:00:00Z and FailureDate le 2024-07-31T00:00:00Z)",
 							"host": [
@@ -951,19 +1011,22 @@
 					"name": "Count by ConnectionFailureEnumValue",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/ConnectionFailureLogs?$apply=filter(CreatedDate gt 2024-07-01T00:00:00.00Z )/groupby((ConnectionFailureEnumValue), aggregate(id with countdistinct as FailureCount))",
 							"host": [
@@ -998,19 +1061,22 @@
 					"name": "Users with high logon duration",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Sessions?$filter=StartDate gt 2020-03-01 and LogonDuration gt 20000 &$expand=Machine($select=Name;$expand=DesktopGroup($select=Name)),User($select=FullName)&$select=StartDate,LogonDuration&orderby=LogOnDuration desc",
 							"host": [
@@ -1051,19 +1117,22 @@
 					"name": "Users of target domain",
 					"request": {
 						"auth": {
-							"type": "noauth"
+							"type": "ntlm",
+							"ntlm": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{username}}",
+									"type": "string"
+								}
+							]
 						},
 						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "CWSAuth bearer={{token}}"
-							},
-							{
-								"key": "Citrix-CustomerId",
-								"value": "{{customer}}"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{baseurl}}/Citrix/Monitor/OData/v4/Data/Users?$filter=Domain eq 'CITRITE'",
 							"host": [
@@ -1094,6 +1163,21 @@
 		{
 			"name": "Metadata",
 			"request": {
+				"auth": {
+					"type": "ntlm",
+					"ntlm": [
+						{
+							"key": "password",
+							"value": "{{password}}",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "{{username}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
