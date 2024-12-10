@@ -38,7 +38,7 @@ The template includes a data model with the most commonly used entities of Monit
 The data model does not include all the available OData entities. Users can expand the data model with mode entities, depending on the use cases their reports cover.
 The table relationships can either be automatically detected by PowerBI, or manually defined. Typically fields named like "entityId" are foreign keys to the table named Entity and the column named "Id". For example "machineId" is a foreign key to the "Machines" table and the column "Id".
 The data model is displayed below.
-![image](_img/date-model.png)
+![image](_img/data-model.png)
 
 ## Sample reports
 The template includes few sample reports that map to actual customer use cases. Customers can use them to extract specific insights and get value out of the underlying data. Customer can also use the sample reports as reference for building new reports for other use cases.
