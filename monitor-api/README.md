@@ -20,7 +20,9 @@ Authentication on Cloud : Odata API on cloud uses bearer token for authenticatio
 Authentication onPrem : Odata Oprem uses NTLM authentication mechanism. Username and password with right set of permissions on CVAD environment will help in executing the API.
 
 # Powershell examples
-[Here](./powershell/Demo_OnPrem.ps1)
+
+OData API requests can be issued using Powershell scripts. This is particularly useful for periodically running queries and collecting Monitor data.
+Sample scripts for making OData requests towards an on-premise or cloud setup, and capturing the data in output files can be found [here](./powershell).
 
 # Postman examples
 There are 2 ways to access the Postman examples for Monitor API.
