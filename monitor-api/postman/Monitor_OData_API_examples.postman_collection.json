@@ -1,0 +1,1388 @@
+{
+	"info": {
+		"_postman_id": "7f6d7e4e-1f16-410e-9233-0fbd9e176dcd",
+		"name": "Monitor OData API examples",
+		"description": "# Background\n\nThe collection shows how to use Citrix Monitor APIs to collect, analyze, and categorize data from Citrix DaaS or on-premises CVAD.\n\nThe examples walkthrough the Citrix dataset that is available through API and give hands-on experience on how to play around with the data.\n\n# Benefits\n\nBy learning to use the API customer admins can:\n\n1. Create a single pane of glass for the Citrix stack data\n    \n2. Build their own monitoring and troubleshooting dashboards for both admins and helpdesk.\n    \n3. Build Integration with 3rd-party systems or data lake for observability or reporting on VDI usage.\n    \n\n# Environment (Monitor OData)\n\n## Cloud Service (DaaS)\n\n**URI:** [https://api.cloud.com/monitorodata/](https://api-{region}.cloud.com/monitorodata/)\n\n**Authentication:** Cloud uses OAuth 2.0 client credentials for authentication\n\n<u>Variables:</u>\n\n- **env: cloud**\n    \n- **client_id**: Reference: [https://developer-docs.citrix.com/en-us/citrix-cloud/citrix-cloud-api-overview/get-started-with-citrix-cloud-apis](https://developer-docs.citrix.com/en-us/citrix-cloud/citrix-cloud-api-overview/get-started-with-citrix-cloud-apis)\n    \n- **client_secret**: Reference: [https://developer-docs.citrix.com/en-us/citrix-cloud/citrix-cloud-api-overview/get-started-with-citrix-cloud-apis](https://developer-docs.citrix.com/en-us/citrix-cloud/citrix-cloud-api-overview/get-started-with-citrix-cloud-apis)\n    \n- **customer_id**: Citrix Cloud customer ID\n    \n\nBefore sending a request, make the \"**Cloud Authentication**\" POST request, which will populate the token variable with a valid bearer token value.\n\n## On-Premises\n\n**URI:** [http://{MonitorServiceHost}](https://api-{region}.cloud.com/monitorodata/)/Citrix/Monitor/OData/v4/Data  \n**Authentication:** NTLM authentication\n\n<u>Variables:</u>\n\n- **env: onprem**\n    \n- **baseurl_onprem**: Monitor Service host, http\\[s\\]://HOST, e.g. http://172.122.10.5\n    \n- **username**\n    \n- **password**\n    \n\nThe request header population is done via a pre-submit script.\n\n# References\n\n1. [https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis](https://developer.cloud.com/citrix-cloud/citrix-cloud-api-overview/docs/get-started-with-citrix-cloud-apis)\n    \n2. [https://developer-docs.citrix.com/en-us/monitor-service-odata-api/overview](https://developer-docs.citrix.com/en-us/monitor-service-odata-api/overview)\n    \n3. [https://developer-docs.citrix.com/en-us/citrix-cloud/accessing-monitor-service-data-citrix-cloud-external/accessing-monitor-service-data-citrix-cloud-external](https://developer-docs.citrix.com/en-us/citrix-cloud/accessing-monitor-service-data-citrix-cloud-external/accessing-monitor-service-data-citrix-cloud-external)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32440403",
+		"_collection_link": "https://www.postman.com/citrix-data-access/citrix-data-public-workspace/collection/71ew0cx/monitor-odata-api-examples?action=share&source=collection_link&creator=32440403"
+	},
+	"item": [
+		{
+			"name": "Machine",
+			"item": [
+				{
+					"name": "Active machines with count",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Machines?$filter=LifecycleState eq 0&$count=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "LifecycleState eq 0"
+								},
+								{
+									"key": "$count",
+									"value": "true"
+								}
+							]
+						},
+						"description": "- Use `/Machines` resource\n    \n- `LifecycleState` value `0` represents `Active` machines\n    \n- `$count=true` parameter returns count in response"
+					},
+					"response": []
+				},
+				{
+					"name": "Machines in failure state",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Machines?null=null&$filter=FailureDate ne null and FailureDate ge 2025-04-01T00:00:00Z",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "null",
+									"value": "null"
+								},
+								{
+									"key": "$filter",
+									"value": "FailureDate ne null and FailureDate ge 2025-04-01T00:00:00Z"
+								}
+							]
+						},
+						"description": "- `FailureDate is null` represents the machine is not in a failure state.\n    \n- `FailureDate ne null` represents the machine is in a failure state.\n    \n- \\`FailureDate ge {{yesterday00}}\\` in `$filter` operation to get the machines in a failure state after yesterday, the time stamp in format`2024-07-30T00:00:00Z`"
+					},
+					"response": []
+				},
+				{
+					"name": "Machine failure details",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Machines?$filter=FailureDate ne null and FailureDate ge 2025-04-01T00:00:00Z&$select=Id&$expand=MachineFailures($filter=FailureStartDate ge 2025-04-01T00:00:00Z)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "FailureDate ne null and FailureDate ge 2025-04-01T00:00:00Z"
+								},
+								{
+									"key": "$select",
+									"value": "Id"
+								},
+								{
+									"key": "$expand",
+									"value": "MachineFailures($filter=FailureStartDate ge 2025-04-01T00:00:00Z)"
+								}
+							]
+						},
+						"description": "- Use `$expand` operation to get the details of MachineFailures"
+					},
+					"response": []
+				},
+				{
+					"name": "Find failed machine power action",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Machines?$apply=filter(AgentVersion ne null and DesktopGroup/Name ne null)/expand(DesktopGroup,filter(Name ne null))/groupby((DesktopGroup/Name,AgentVersion),aggregate(Id with countdistinct as MachineCount))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(AgentVersion ne null and DesktopGroup/Name ne null)/expand(DesktopGroup,filter(Name ne null))/groupby((DesktopGroup/Name,AgentVersion),aggregate(Id with countdistinct as MachineCount))"
+								}
+							]
+						},
+						"description": "- `LifecycleState eq 0` represents active machines.\n- `MachineRole eq 0` represents a VDA machine.\n- Use `$expand` to get associated information."
+					},
+					"response": []
+				},
+				{
+					"name": "Alive sessions on each machine",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Machines?$select=Name,IsInMaintenanceMode,CurrentRegistrationState,CurrentSessionCount,IsPreparing,FaultState&$expand=DesktopGroup($select=Id,Name),Sessions($select=SessionKey,ConnectionState;$filter=EndDate+eq+null)&$filter=Name+ne+null+and+DesktopGroup+ne+null",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "Name,IsInMaintenanceMode,CurrentRegistrationState,CurrentSessionCount,IsPreparing,FaultState"
+								},
+								{
+									"key": "$expand",
+									"value": "DesktopGroup($select=Id,Name),Sessions($select=SessionKey,ConnectionState;$filter=EndDate+eq+null)"
+								},
+								{
+									"key": "$filter",
+									"value": "Name+ne+null+and+DesktopGroup+ne+null"
+								}
+							]
+						},
+						"description": "- `Sessions` in `$expand` operation to get the sessions on this machine.\n- `EndDate eq null` represents the session is still alive."
+					},
+					"response": []
+				},
+				{
+					"name": "Active VDA machines associated information",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Machines?$filter=LifecycleState eq 0 and Name ne null and DnsName ne '' and CatalogId ne null and MachineRole eq 0&$expand=CurrentLoadIndex,Catalog,Hypervisor",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "LifecycleState eq 0 and Name ne null and DnsName ne '' and CatalogId ne null and MachineRole eq 0"
+								},
+								{
+									"key": "$expand",
+									"value": "CurrentLoadIndex,Catalog,Hypervisor"
+								}
+							]
+						},
+						"description": "- `LifecycleState eq 0` represents active machines.\n- `MachineRole eq 0` represents a VDA machine.\n- Use `$expand` to get associated information."
+					},
+					"response": []
+				},
+				{
+					"name": "VDA machine availability over time",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/MachineSummaries?$filter=Granularity eq 60 and SummaryDate ge 2025-05-01&$select=SummaryDate,PoweredOnMachinesCount,RegisteredMachinesCount,MachinesInMaintenanceModeCount,MachinesCount&$expand=DesktopGroup($select=Id,Name)&$orderby=DesktopGroup/Name",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"MachineSummaries"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "Granularity eq 60 and SummaryDate ge 2025-05-01"
+								},
+								{
+									"key": "$select",
+									"value": "SummaryDate,PoweredOnMachinesCount,RegisteredMachinesCount,MachinesInMaintenanceModeCount,MachinesCount"
+								},
+								{
+									"key": "$expand",
+									"value": "DesktopGroup($select=Id,Name)"
+								},
+								{
+									"key": "$orderby",
+									"value": "DesktopGroup/Name"
+								}
+							]
+						},
+						"description": "- `LifecycleState eq 0` represents active machines.\n- `MachineRole eq 0` represents a VDA machine.\n- Use `$expand` to get associated information."
+					},
+					"response": []
+				},
+				{
+					"name": "List of Hotfixes per machine",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/MachineHotfixLogs?$filter=CreatedDate ge 2025-02-01&$expand=Machine($select=Name;$expand=DesktopGroup($select=Name)),Hotfix&$orderby=Machine/DesktopGroup/Name,Machine/Name",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"MachineHotfixLogs"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "CreatedDate ge 2025-02-01"
+								},
+								{
+									"key": "$expand",
+									"value": "Machine($select=Name;$expand=DesktopGroup($select=Name)),Hotfix"
+								},
+								{
+									"key": "$orderby",
+									"value": "Machine/DesktopGroup/Name,Machine/Name"
+								}
+							]
+						},
+						"description": "- `LifecycleState eq 0` represents active machines.\n- `MachineRole eq 0` represents a VDA machine.\n- Use `$expand` to get associated information."
+					},
+					"response": []
+				},
+				{
+					"name": "List of VDA versions",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Machines?$apply=filter(AgentVersion ne null and DesktopGroup/Name ne null)/expand(DesktopGroup,filter(Name ne null))/groupby((DesktopGroup/Name,AgentVersion),aggregate(Id with countdistinct as MachineCount))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Machines"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(AgentVersion ne null and DesktopGroup/Name ne null)/expand(DesktopGroup,filter(Name ne null))/groupby((DesktopGroup/Name,AgentVersion),aggregate(Id with countdistinct as MachineCount))"
+								}
+							]
+						},
+						"description": "- `LifecycleState eq 0` represents active machines.\n- `MachineRole eq 0` represents a VDA machine.\n- Use `$expand` to get associated information."
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity machine."
+		},
+		{
+			"name": "Machine resource utilization",
+			"item": [
+				{
+					"name": "Powered on machine CPU and memory usage at hour level",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ResourceUtilizationSummary?$filter=Granularity eq 1440 and SummaryDate eq 2024-07-30T00:00:00Z and UptimeInMinutes gt 0&$expand=Machine($select=Name,AgentVersion),DesktopGroup($select=Name)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ResourceUtilizationSummary"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "Granularity eq 1440 and SummaryDate eq 2024-07-30T00:00:00Z and UptimeInMinutes gt 0"
+								},
+								{
+									"key": "$expand",
+									"value": "Machine($select=Name,AgentVersion),DesktopGroup($select=Name)"
+								}
+							]
+						},
+						"description": "- `Granularity = 60` represents hourly level metrics.\n- `UptimeInMinutes > 0` represents the machine powered on in this hour."
+					},
+					"response": []
+				},
+				{
+					"name": "Powered on machine CPU and memory usage at day level",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ResourceUtilizationSummary?$filter=Granularity eq 1440 and SummaryDate eq 2025-04-20T00:00:00Z and UptimeInMinutes gt 0",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ResourceUtilizationSummary"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "Granularity eq 1440 and SummaryDate eq 2025-04-20T00:00:00Z and UptimeInMinutes gt 0"
+								}
+							]
+						},
+						"description": "- `Granularity = 1440` represents day level metrics.\n- `UptimeInMinutes > 0` represents the machine powered on in this day."
+					},
+					"response": []
+				},
+				{
+					"name": "Machine resource utilization aggregates by delivery group",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ResourceUtilizationSummary?$apply=filter(Granularity eq 60 and SummaryDate ge 2025-05-03 and UptimeInMinutes gt 0 and AvgTotalMemory gt 0 and AvgUsedMemory gt 0 and PeakUsedMemory gt 0)/compute(100 mul AvgUsedMemory div AvgTotalMemory as AvgPercentMemory, 100 mul PeakUsedMemory div AvgTotalMemory as PeakPercentMemory)/expand(DesktopGroup,filter(Name ne null))/groupby((DesktopGroup/Name,SummaryDate),aggregate(AvgPercentCpu with average as AvgPercentCpu, PeakPercentCpu with max as PeakPercentCpu, AvgPercentMemory with average as AvgPercentMemory, PeakPercentMemory with max as PeakPercentMemory))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ResourceUtilizationSummary"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(Granularity eq 60 and SummaryDate ge 2025-05-03 and UptimeInMinutes gt 0 and AvgTotalMemory gt 0 and AvgUsedMemory gt 0 and PeakUsedMemory gt 0)/compute(100 mul AvgUsedMemory div AvgTotalMemory as AvgPercentMemory, 100 mul PeakUsedMemory div AvgTotalMemory as PeakPercentMemory)/expand(DesktopGroup,filter(Name ne null))/groupby((DesktopGroup/Name,SummaryDate),aggregate(AvgPercentCpu with average as AvgPercentCpu, PeakPercentCpu with max as PeakPercentCpu, AvgPercentMemory with average as AvgPercentMemory, PeakPercentMemory with max as PeakPercentMemory))"
+								}
+							]
+						},
+						"description": "- `Granularity = 1440` represents day level metrics.\n- `UptimeInMinutes > 0` represents the machine powered on in this day."
+					},
+					"response": []
+				},
+				{
+					"name": "Daily average uptime by Desktop Group",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ResourceUtilizationSummary?$apply=filter(Granularity eq 1440 and SummaryDate ge 2025-05-01 and SummaryDate le 2025-05-10)/expand(Machine,expand(DesktopGroup,filter(Name ne null)))/groupby((DesktopGroup/Id), aggregate(cast(UptimeInMinutes, Edm.Int32) with average as AvgUptimeInMinutes))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ResourceUtilizationSummary"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(Granularity eq 1440 and SummaryDate ge 2025-05-01 and SummaryDate le 2025-05-10)/expand(Machine,expand(DesktopGroup,filter(Name ne null)))/groupby((DesktopGroup/Id), aggregate(cast(UptimeInMinutes, Edm.Int32) with average as AvgUptimeInMinutes))"
+								}
+							]
+						},
+						"description": "- `Granularity = 1440` represents day level metrics.\n- `UptimeInMinutes > 0` represents the machine powered on in this day."
+					},
+					"response": []
+				},
+				{
+					"name": "Unused machines",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ResourceUtilizationSummary?$apply=filter(Granularity eq 60 and SummaryDate ge 2025-05-05 and UptimeInMinutes gt 0)/expand(Machine,expand(DesktopGroup,filter(Name ne null)))/compute(cast(TotalSessionCount,Edm.Int64) as TotalSessionCountInt64 )/groupby((DesktopGroup/Name,MachineId,Machine/Name),aggregate(TotalSessionCountInt64 with sum as TotalSessionCountSum))/filter(TotalSessionCountSum eq 0)&$count=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ResourceUtilizationSummary"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(Granularity eq 60 and SummaryDate ge 2025-05-05 and UptimeInMinutes gt 0)/expand(Machine,expand(DesktopGroup,filter(Name ne null)))/compute(cast(TotalSessionCount,Edm.Int64) as TotalSessionCountInt64 )/groupby((DesktopGroup/Name,MachineId,Machine/Name),aggregate(TotalSessionCountInt64 with sum as TotalSessionCountSum))/filter(TotalSessionCountSum eq 0)"
+								},
+								{
+									"key": "$count",
+									"value": "true"
+								}
+							]
+						},
+						"description": "- `LifecycleState eq 0` represents active machines.\n- `MachineRole eq 0` represents a VDA machine.\n- Use `$expand` to get associated information."
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for machine level CPU and memory usage."
+		},
+		{
+			"name": "Session",
+			"item": [
+				{
+					"name": "ApplicationInstances for active sessions",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Sessions?$expand=ApplicationInstances&$filter=(ConnectionState eq 5) and (ModifiedDate gt 2025-04-20T07:00:00Z and ModifiedDate le 2025-05-01T07:00:00Z )",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "ApplicationInstances"
+								},
+								{
+									"key": "$filter",
+									"value": "(ConnectionState eq 5) and (ModifiedDate gt 2025-04-20T07:00:00Z and ModifiedDate le 2025-05-01T07:00:00Z )"
+								}
+							]
+						},
+						"description": "- `ConnectionState eq 5` represents the connection state of this session is active.\n    \n- `ModifiedDate` represents the target time range."
+					},
+					"response": []
+				},
+				{
+					"name": "Connection and machine information of each session",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Sessions?$select=StartDate,LogOnDuration,EndDate&$expand=Machine($select=DesktopGroupId),Connections($select=LogOnStartDate,LogOnEndDate,BrokeringDuration,VMStartStartDate,VMStartEndDate,HdxStartDate,HdxEndDate,AuthenticationDuration,GpoStartDate,GpoEndDate,LogOnScriptsStartDate,LogOnScriptsEndDate,ProfileLoadStartDate,ProfileLoadEndDate,InteractiveStartDate,InteractiveEndDate;$filter=IsReconnect+eq+false)&$filter=LogOnDuration+ne+null+and+StartDate+gt+cast(2025-04-20T00:00:00.000Z,+Edm.DateTimeOffset)&$orderby=StartDate+desc",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "StartDate,LogOnDuration,EndDate"
+								},
+								{
+									"key": "$expand",
+									"value": "Machine($select=DesktopGroupId),Connections($select=LogOnStartDate,LogOnEndDate,BrokeringDuration,VMStartStartDate,VMStartEndDate,HdxStartDate,HdxEndDate,AuthenticationDuration,GpoStartDate,GpoEndDate,LogOnScriptsStartDate,LogOnScriptsEndDate,ProfileLoadStartDate,ProfileLoadEndDate,InteractiveStartDate,InteractiveEndDate;$filter=IsReconnect+eq+false)"
+								},
+								{
+									"key": "$filter",
+									"value": "LogOnDuration+ne+null+and+StartDate+gt+cast(2025-04-20T00:00:00.000Z,+Edm.DateTimeOffset)"
+								},
+								{
+									"key": "$orderby",
+									"value": "StartDate+desc"
+								}
+							]
+						},
+						"description": "- Connection represents an initial connection or reconnect for a session.\n    \n- Use `$expand` operation to get the connection state for each session."
+					},
+					"response": []
+				},
+				{
+					"name": "SessionMetrics for alive sessions",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Sessions?$filter=EndDate eq null &$select=StartDate,ConnectionState,SessionIdleTime&$expand=SessionMetrics($select=IcaRttMS),Machine($expand=DesktopGroup($select=Name)),Machine($select=Name),User($select=UserName),CurrentConnection($select=ClientName,ClientVersion,ClientAddress,ConnectedViaIPAddress,BrokeringDuration)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "EndDate eq null "
+								},
+								{
+									"key": "$select",
+									"value": "StartDate,ConnectionState,SessionIdleTime"
+								},
+								{
+									"key": "$expand",
+									"value": "SessionMetrics($select=IcaRttMS),Machine($expand=DesktopGroup($select=Name)),Machine($select=Name),User($select=UserName),CurrentConnection($select=ClientName,ClientVersion,ClientAddress,ConnectedViaIPAddress,BrokeringDuration)"
+								}
+							]
+						},
+						"description": "- `EndDate is null` represents alive session.\n- Use `$expand=SessionMetrics` to get the metrics of each session."
+					},
+					"response": []
+				},
+				{
+					"name": "Alive sessions for target DesktopGroup",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Sessions?$expand=Machine($expand=DesktopGroup)&$filter=(Machine/DesktopGroup/Id eq ad9e2d3d-44ac-49b0-a34b-7affb5ce3596) and (EndDate eq null)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$expand",
+									"value": "Machine($expand=DesktopGroup)"
+								},
+								{
+									"key": "$filter",
+									"value": "(Machine/DesktopGroup/Id eq ad9e2d3d-44ac-49b0-a34b-7affb5ce3596) and (EndDate eq null)"
+								}
+							]
+						},
+						"description": "- `Machine/DesktopGroup/Id eq ad9e2d3d-44ac-49b0-a34b-7affb5ce3596` represents the target desktopgroup.\n- `EndDate eq null` represent the alive session."
+					},
+					"response": []
+				},
+				{
+					"name": "Terminated sessions in a time range",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Sessions?$filter=ConnectionState ne 3 or FailureDate gt 2025-05-01T10:00:00.000Z",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "ConnectionState ne 3 or FailureDate gt 2025-05-01T10:00:00.000Z"
+								}
+							]
+						},
+						"description": "- `ConnectionState ne 3` represents terminated sessions\n    \n- `FailureDate gt` gets failures after the mentioned timestamp"
+					},
+					"response": []
+				},
+				{
+					"name": "Running desktop sessions",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Sessions?$filter=ConnectionState eq 5 and EndDate eq null and SessionType eq 0&$select=SessionKey,StartDate,SessionType&$expand=PublishedDesktopName,User($select=Fullname,Upn),Machine($select=Name)&$count=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "ConnectionState eq 5 and EndDate eq null and SessionType eq 0"
+								},
+								{
+									"key": "$select",
+									"value": "SessionKey,StartDate,SessionType"
+								},
+								{
+									"key": "$expand",
+									"value": "PublishedDesktopName,User($select=Fullname,Upn),Machine($select=Name)"
+								},
+								{
+									"key": "$count",
+									"value": "true"
+								}
+							]
+						},
+						"description": "- `ConnectionState ne 3` represents terminated sessions\n    \n- `FailureDate gt` gets failures after the mentioned timestamp"
+					},
+					"response": []
+				},
+				{
+					"name": "Number of active sessions by Delivery group",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Sessions?$apply=filter(StartDate ge 2025-05-02 and EndDate eq null)/expand(Machine,expand(DesktopGroup,filter(Name ne null)))/groupby((Machine/DesktopGroup/Name,SessionType),aggregate(SessionKey with countdistinct as SessionCount))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(StartDate ge 2025-05-02 and EndDate eq null)/expand(Machine,expand(DesktopGroup,filter(Name ne null)))/groupby((Machine/DesktopGroup/Name,SessionType),aggregate(SessionKey with countdistinct as SessionCount))"
+								}
+							]
+						},
+						"description": "- `ConnectionState ne 3` represents terminated sessions\n    \n- `FailureDate gt` gets failures after the mentioned timestamp"
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity session."
+		},
+		{
+			"name": "Application",
+			"item": [
+				{
+					"name": "Active applications with desktop group ID",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Applications?$filter=LifecycleState eq 0&$expand=DesktopGroups($select=Id)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Applications"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "LifecycleState eq 0"
+								},
+								{
+									"key": "$expand",
+									"value": "DesktopGroups($select=Id)"
+								}
+							]
+						},
+						"description": "- `LifecycleState=0` represents the active application."
+					},
+					"response": []
+				},
+				{
+					"name": "Application count by ApplicationType",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Applications?$apply=groupby((ApplicationType), aggregate(NAme with countdistinct as NumberofApplications))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Applications"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "groupby((ApplicationType), aggregate(NAme with countdistinct as NumberofApplications))"
+								}
+							]
+						},
+						"description": "- Use `groupby` operation to get the  count group by ApplicationType."
+					},
+					"response": []
+				},
+				{
+					"name": "Active applications with count",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Applications?$filter=LifecycleState eq 0&$count=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Applications"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "LifecycleState eq 0"
+								},
+								{
+									"key": "$count",
+									"value": "true"
+								}
+							]
+						},
+						"description": "- `LifecycleState eq 0` represents Active applications\n- `$count=true` parameter returns count in response"
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity application."
+		},
+		{
+			"name": "ApplicationInstance",
+			"item": [
+				{
+					"name": "ApplicationInstances for non-terminated sessions",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ApplicationInstances?$filter=EndDate eq null and Session/ConnectionState ne 3&$expand=Application($select=Name,PublishedName,Path),Session($select=StartDate,ConnectionState,SessionType;$expand=Machine($select=Name))&$count=true",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ApplicationInstances"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "EndDate eq null and Session/ConnectionState ne 3"
+								},
+								{
+									"key": "$expand",
+									"value": "Application($select=Name,PublishedName,Path),Session($select=StartDate,ConnectionState,SessionType;$expand=Machine($select=Name))"
+								},
+								{
+									"key": "$count",
+									"value": "true"
+								}
+							]
+						},
+						"description": "- `EndDate is null` and `ConnectionState!=3` represents non-terminated sessions."
+					},
+					"response": []
+				},
+				{
+					"name": "ApplicationInstances for target application with Machine and User information",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ApplicationInstances?$apply=filter(ApplicationId eq 6b07220e-b7d2-4f8d-9e43-49bd85222553 and EndDate eq null)&$expand=Session($expand=Machine,User)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ApplicationInstances"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(ApplicationId eq 6b07220e-b7d2-4f8d-9e43-49bd85222553 and EndDate eq null)"
+								},
+								{
+									"key": "$expand",
+									"value": "Session($expand=Machine,User)"
+								}
+							]
+						},
+						"description": "- Use `filter` operation to get the details for target application.\n- Use `expand` operation to get the related Machine and User Information."
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity ApplicationInstance."
+		},
+		{
+			"name": "Connections",
+			"item": [
+				{
+					"name": "Connection details for sessions with failure",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Connections?$filter=Session/FailureDate ge 2024-07-24T00:00:00.000Z and Session/FailureDate le 2024-07-25T00:00:00.000Z &$select=*,&$expand=Session($select=*;$expand=User($select=UPN,UserName),Failure($select=ConnectionFailureEnumValue,Category),Machine($select=DnsName,DesktopGroupId,IsInMaintenanceMode))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Connections"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "Session/FailureDate ge 2024-07-24T00:00:00.000Z and Session/FailureDate le 2024-07-25T00:00:00.000Z "
+								},
+								{
+									"key": "$select",
+									"value": "*,"
+								},
+								{
+									"key": "$expand",
+									"value": "Session($select=*;$expand=User($select=UPN,UserName),Failure($select=ConnectionFailureEnumValue,Category),Machine($select=DnsName,DesktopGroupId,IsInMaintenanceMode))"
+								}
+							]
+						},
+						"description": "- Use `$expand` operation to get the details for sessions with failure"
+					},
+					"response": []
+				},
+				{
+					"name": "List of client versions",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Connections?$apply=filter(ClientVersion ne null and ClientPlatform ne null)/groupby((ClientPlatform,ClientVersion),aggregate(ClientName with countdistinct as ClientCount))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Connections"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(ClientVersion ne null and ClientPlatform ne null)/groupby((ClientPlatform,ClientVersion),aggregate(ClientName with countdistinct as ClientCount))"
+								}
+							]
+						},
+						"description": "- Use `$expand` operation to get the details for sessions with failure"
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity Connections."
+		},
+		{
+			"name": "ConnectionFailureLogs",
+			"item": [
+				{
+					"name": "ConnectionFailureLogs for target time",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ConnectionFailureLogs?$filter=(FailureDate ge 2024-07-30T00:00:00Z and FailureDate le 2024-07-31T00:00:00Z)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ConnectionFailureLogs"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "(FailureDate ge 2024-07-30T00:00:00Z and FailureDate le 2024-07-31T00:00:00Z)"
+								}
+							]
+						},
+						"description": "- `$filter=(FailureDate ge 2024-07-30T00:00:00Z and FailureDate le 2024-07-31T00:00:00Z)` represents the target time range.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "ConnectionFailureLogs related Machine, Session and User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ConnectionFailureLogs?$filter=(FailureDate ge 2024-07-31T00:00:00Z)&$expand=Machine($select=Name,CurrentRegistrationState,IsInMaintenanceMode),User($select=Sid,Upn,UserName,Domain),Session",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ConnectionFailureLogs"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "(FailureDate ge 2024-07-31T00:00:00Z)"
+								},
+								{
+									"key": "$expand",
+									"value": "Machine($select=Name,CurrentRegistrationState,IsInMaintenanceMode),User($select=Sid,Upn,UserName,Domain),Session"
+								}
+							]
+						},
+						"description": "- With `$expand` operation, to get the related Machine, Session and User details for ConnectionFailureLogs.\n"
+					},
+					"response": []
+				},
+				{
+					"name": "Count by ConnectionFailureEnumValue",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ConnectionFailureLogs?$apply=filter(CreatedDate gt 2024-07-01T00:00:00.00Z )/groupby((ConnectionFailureEnumValue), aggregate(id with countdistinct as FailureCount))",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ConnectionFailureLogs"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(CreatedDate gt 2024-07-01T00:00:00.00Z )/groupby((ConnectionFailureEnumValue), aggregate(id with countdistinct as FailureCount))"
+								}
+							]
+						},
+						"description": "- With `groupby` and `aggregate` operations, can get the ConnectionFailureLogs count groupby ConnectionFailureEnumValue."
+					},
+					"response": []
+				},
+				{
+					"name": "Users with high number of session failures",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/ConnectionFailureLogs?$apply=filter(Session/StartDate ge 2025-05-01)/groupby((Session/User/FullName,ConnectionFailureEnumValue), aggregate(Id with countdistinct as FailureCount))&$orderby=FailureCount desc&$top=20",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"ConnectionFailureLogs"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "filter(Session/StartDate ge 2025-05-01)/groupby((Session/User/FullName,ConnectionFailureEnumValue), aggregate(Id with countdistinct as FailureCount))"
+								},
+								{
+									"key": "$orderby",
+									"value": "FailureCount desc"
+								},
+								{
+									"key": "$top",
+									"value": "20"
+								}
+							]
+						},
+						"description": "- With `groupby` and `aggregate` operations, can get the ConnectionFailureLogs count groupby ConnectionFailureEnumValue."
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity ConnectionFailureLogs."
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Users of target domain",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Users?$filter=Domain eq 'CITRITE'",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Users"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "Domain eq 'CITRITE'"
+								}
+							]
+						},
+						"description": "- `Domain eq 'CITRITE'` represents the target domian."
+					},
+					"response": []
+				},
+				{
+					"name": "Users with high logon duration",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/Sessions?$filter=StartDate ge 2025-05-01 and LogonDuration gt 120000 &$expand=Machine($select=Name;$expand=DesktopGroup($select=Name)),User($select=FullName,Upn),Connections($select=LogOnStartDate,LogOnEndDate,BrokeringDuration,VMStartStartDate,VMStartEndDate,HdxStartDate,HdxEndDate,AuthenticationDuration,GpoStartDate,GpoEndDate,LogOnScriptsStartDate,LogOnScriptsEndDate,ProfileLoadStartDate,ProfileLoadEndDate,InteractiveStartDate,InteractiveEndDate,ClientName,ClientPlatform,Protocol,IsReconnect;$filter=IsReconnect eq false),&$select=StartDate,SessionKey,SessionType,LogonDuration&$orderby=LogOnDuration desc",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"Sessions"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "StartDate ge 2025-05-01 and LogonDuration gt 120000 "
+								},
+								{
+									"key": "$expand",
+									"value": "Machine($select=Name;$expand=DesktopGroup($select=Name)),User($select=FullName,Upn),Connections($select=LogOnStartDate,LogOnEndDate,BrokeringDuration,VMStartStartDate,VMStartEndDate,HdxStartDate,HdxEndDate,AuthenticationDuration,GpoStartDate,GpoEndDate,LogOnScriptsStartDate,LogOnScriptsEndDate,ProfileLoadStartDate,ProfileLoadEndDate,InteractiveStartDate,InteractiveEndDate,ClientName,ClientPlatform,Protocol,IsReconnect;$filter=IsReconnect eq false),"
+								},
+								{
+									"key": "$select",
+									"value": "StartDate,SessionKey,SessionType,LogonDuration"
+								},
+								{
+									"key": "$orderby",
+									"value": "LogOnDuration desc"
+								}
+							]
+						},
+						"description": "- `ConnectionState ne 3` represents terminated sessions\n    \n- `FailureDate gt` gets failures after the mentioned timestamp"
+					},
+					"response": []
+				},
+				{
+					"name": "Users with high ICARTT (low responsiveness)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/SessionMetrics?$filter=CollectedDate ge 2025-05-01 and IcaRttMS gt 300&$select=IcaRttMS&$expand=Session($select=StartDate,SessionKey,SessionType;$expand=User($select=FullName,Upn),Machine($select=Name),CurrentConnection($select=ClientName,ClientPlatform,Protocol))&$orderby=IcaRttMS desc",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"SessionMetrics"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "CollectedDate ge 2025-05-01 and IcaRttMS gt 300"
+								},
+								{
+									"key": "$select",
+									"value": "IcaRttMS"
+								},
+								{
+									"key": "$expand",
+									"value": "Session($select=StartDate,SessionKey,SessionType;$expand=User($select=FullName,Upn),Machine($select=Name),CurrentConnection($select=ClientName,ClientPlatform,Protocol))"
+								},
+								{
+									"key": "$orderby",
+									"value": "IcaRttMS desc"
+								}
+							]
+						},
+						"description": "- `ConnectionState ne 3` represents terminated sessions\n    \n- `FailureDate gt` gets failures after the mentioned timestamp"
+					},
+					"response": []
+				}
+			],
+			"description": "Use cases for entity user."
+		},
+		{
+			"name": "Cost Optimization",
+			"item": [
+				{
+					"name": "Total savings",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/MachineCostSavingsSummaries?$apply=aggregate(TotalAmountSaved with sum as TotalAmountSavedSum)",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"MachineCostSavingsSummaries"
+							],
+							"query": [
+								{
+									"key": "$apply",
+									"value": "aggregate(TotalAmountSaved with sum as TotalAmountSavedSum)"
+								}
+							]
+						},
+						"description": "- `Domain eq 'CITRITE'` represents the target domian."
+					},
+					"response": []
+				},
+				{
+					"name": "Find machine state",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseurl}}/MachineCostSavingsSummaries?$filter=SummaryDate eq 2025-05-09T06:00:00Z&$select=TotalMachinesCount,PowerManagedMachinesOff,PowerManagedMachinesInHibernate,PowerManagedMachinesOnWithSessions,PowerManagedMachinesOnWithoutSessions",
+							"host": [
+								"{{baseurl}}"
+							],
+							"path": [
+								"MachineCostSavingsSummaries"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "SummaryDate eq 2025-05-09T06:00:00Z"
+								},
+								{
+									"key": "$select",
+									"value": "TotalMachinesCount,PowerManagedMachinesOff,PowerManagedMachinesInHibernate,PowerManagedMachinesOnWithSessions,PowerManagedMachinesOnWithoutSessions"
+								}
+							]
+						},
+						"description": "- `Domain eq 'CITRITE'` represents the target domian."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cloud Authentication",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Content-Type header is valid\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"    pm.response.to.be.header(\"Content-Type\", \"application/json\");",
+							"});",
+							"",
+							"var jsonData = JSON.parse(pm.response.text());",
+							"pm.environment.set(\"token\", jsonData.access_token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true,
+					"accept-encoding": true,
+					"connection": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/x-www-form-urlencoded",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "{{client_secret}}",
+							"type": "text"
+						},
+						{
+							"key": "client_id",
+							"value": "{{client_id}}",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{gateway_url}}/{{customer_id}}/tokens/clients",
+					"host": [
+						"{{gateway_url}}"
+					],
+					"path": [
+						"{{customer_id}}",
+						"tokens",
+						"clients"
+					]
+				},
+				"description": "Generates bearer token for Citrix Cloud API calls using OAuth 2 client credentials defined in the environment. The token is valid for 60 minutes and needs to be created fresh after that.\n\nThe generated bearer token is auto populated into the Authorization header for all the other API requests,"
+			},
+			"response": []
+		},
+		{
+			"name": "Metadata",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseurl}}/$metadata",
+					"host": [
+						"{{baseurl}}"
+					],
+					"path": [
+						"$metadata"
+					]
+				},
+				"description": "- Returns metadata about all entities supported and their attributes"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"if (pm.request.method === \"POST\") {\r",
+					"    return;\r",
+					"}\r",
+					"\r",
+					"var postman = require(\"postman-collection\");\r",
+					"var auth = new postman.RequestAuth({\r",
+					"  type: \"ntlm\",\r",
+					"  ntlm: [\r",
+					"    { key: \"username\", value: pm.environment.get(\"username\") },\r",
+					"    { key: \"password\", value: pm.environment.get(\"password\") }\r",
+					"  ]\r",
+					"});\r",
+					"\r",
+					"pm.request.auth.clear;\r",
+					"if (pm.environment.get(\"env\") == \"onprem\") {\r",
+					"    console.log(\"Env is on-prem\");\r",
+					"    pm.request.auth = auth;\r",
+					"    pm.collectionVariables.set(\"baseurl\", pm.environment.get(\"baseurl_onprem\") + \"/\" + pm.collectionVariables.get(\"onprem_url_suffix\"));\r",
+					"} else if (pm.environment.get(\"env\") == \"cloud\") {\r",
+					"    console.log(\"Env is cloud\");\r",
+					"    pm.request.headers.add({key: \"Citrix-CustomerId\", value: pm.environment.get(\"customer_id\")});\r",
+					"    pm.request.headers.add({key: \"Authorization\", value: \"CWSAuth bearer=\" + pm.environment.get(\"token\")});\r",
+					"    pm.collectionVariables.set(\"baseurl\", pm.environment.get(\"baseurl_cloud\"));\r",
+					"} else {\r",
+					"    console.log(\"Invalid environment variable 'env'. Acceptable values are 'cloud' and 'on-prem'\");\r",
+					"}\r",
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "onprem_url_suffix",
+			"value": "Citrix/Monitor/OData/v4/Data"
+		},
+		{
+			"key": "baseurl",
+			"value": "CALCULATED"
+		}
+	]
+}
