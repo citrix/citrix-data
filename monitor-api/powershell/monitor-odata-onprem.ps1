@@ -136,6 +136,46 @@ Param
 
 # $VerbosePreference="Continue"
 
+
+Function Flatten-Object {                                       # Version 00.02.12, by iRon
+    [CmdletBinding()]Param (
+        [Parameter(ValueFromPipeLine = $True)][Object[]]$Objects,
+        [String]$Separator = ".", [ValidateSet("", 0, 1)]$Base = 1, [Int]$Depth = 5, [Int]$Uncut = 1,
+        [String[]]$ToString = ([String], [DateTime], [TimeSpan]), [String[]]$Path = @()
+    )
+    $PipeLine = $Input | ForEach {$_}; If ($PipeLine) {$Objects = $PipeLine}
+    If (@(Get-PSCallStack)[1].Command -eq $MyInvocation.MyCommand.Name -or @(Get-PSCallStack)[1].Command -eq "<position>") {
+        $Object = @($Objects)[0]; $Iterate = New-Object System.Collections.Specialized.OrderedDictionary
+        If ($ToString | Where {$Object -is $_}) {$Object = $Object.ToString()}
+        ElseIf ($Depth) {$Depth--
+            If ($Object.GetEnumerator.OverloadDefinitions -match "[\W]IDictionaryEnumerator[\W]") {
+                $Iterate = $Object
+            } ElseIf ($Object.GetEnumerator.OverloadDefinitions -match "[\W]IEnumerator[\W]") {
+                $Object.GetEnumerator() | ForEach -Begin {$i = $Base} {$Iterate.($i) = $_; $i += 1}
+            } Else {
+                $Names = If ($Uncut) {$Uncut--} Else {$Object.PSStandardMembers.DefaultDisplayPropertySet.ReferencedPropertyNames}
+                If (!$Names) {$Names = $Object.PSObject.Properties | Where {$_.IsGettable} | Select -Expand Name}
+                If ($Names) {$Names | ForEach {$Iterate.$_ = $Object.$_}}
+            }
+        }
+        If (@($Iterate.Keys).Count) {
+            $Iterate.Keys | ForEach {
+                Flatten-Object @(,$Iterate.$_) $Separator $Base $Depth $Uncut $ToString ($Path + $_)
+            }
+        }  Else {$Property.(($Path | Where {$_}) -Join $Separator) = $Object}
+    } ElseIf ($Objects -ne $Null) {
+        @($Objects) | ForEach -Begin {$Output = @(); $Names = @()} {
+            New-Variable -Force -Option AllScope -Name Property -Value (New-Object System.Collections.Specialized.OrderedDictionary)
+            Flatten-Object @(,$_) $Separator $Base $Depth $Uncut $ToString $Path
+            $Output += New-Object PSObject -Property $Property
+            $Names += $Output[-1].PSObject.Properties | Select -Expand Name
+        }
+        $Output | Select ([String[]]($Names | Select -Unique))
+    }
+}; Set-Alias Flatten Flatten-Object
+
+
+
 if( -Not [string]::IsNullOrEmpty( $outputFile ) )
 {
     ## format not specified so get from output file extension
@@ -300,7 +340,14 @@ if( $data -and $data.Count )
 {
     Write-Verbose -Message "Got $($data.Count) results"
 
-    $finalOutput = $data | . $outputCommand @outputArguments ## output to stdout
+    if( $format -eq "csv" )
+    {
+        $finalOutput = $data | Flatten-Object | . $outputCommand @outputArguments ## output to stdout
+    }
+    else
+    {
+        $finalOutput = $data | . $outputCommand @outputArguments ## output to stdout
+    }
 
     if( [string]::IsNullOrEmpty( $outputFile ) )
     {
