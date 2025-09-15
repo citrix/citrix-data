@@ -128,7 +128,7 @@ Param
     [string]$overWrite = 'No' ,
     [string]$csvOutputDelimiter = ',',
     [string]$outputFile , 
-    [string]$baseCloudURL =  'https://api-us.cloud.com/monitorodata' ,
+    [string]$baseCloudURL =  'https://api.cloud.com/monitorodata' ,
     [int]$oDataVersion = 4 ,
     [int]$retryMilliseconds = 1000 ,
     [switch]$AllowUnencryptedAuthentication
@@ -199,7 +199,7 @@ Function Get-BearerToken {
     {
         $startRequestTime = [datetime]::Now
         Write-Verbose -Message "$($startRequestTime.ToString('G')): sending auth request"
-        $response = Invoke-RestMethod -Uri 'https://api-us.cloud.com/cctrustoauth2/root/tokens/clients' -Method POST -Body $body
+        $response = Invoke-RestMethod -Uri 'https://api.cloud.com/cctrustoauth2/root/tokens/clients' -Method POST -Body $body
         $endRequestTime = [datetime]::Now
     }
     catch
@@ -291,7 +291,7 @@ if( -Not $PSBoundParameters[ 'authtoken' ] )
         Throw "Failed to get authentication token for customer id $customerid"
     }
 }
-$params.Add( 'Headers' , @{ 'Citrix-CustomerId' = $customerid ; 'Authorization' = $authtoken } )
+$params.Add( 'Headers' , @{ 'Citrix-CustomerId' = $customerid ; 'Authorization' = $authtoken ; 'Accept-Encoding' = 'gzip' ; 'User-Agent' = 'Powershell-Citrix-Monitor' } )
 $protocol = 'https'
 
 $updated_query = $query -replace '\`' , ''
