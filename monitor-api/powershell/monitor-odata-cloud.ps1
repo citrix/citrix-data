@@ -22,6 +22,10 @@ Pseudo environment variables like %day% and %month% can be used in the folder an
 
 If specified as "yes", any existing output file will be overwritten otherwise the script will fail if the outoput file already exists
 
+.PARAMETER flatten
+
+If specified as "yes", any nested JSON fields will be flattened by using '.', e.g. Machine.DesktopGroup.Name. This is by default applied for CSV.
+
 .PARAMETER format
 
 The output format to use. If not specified it will be determined from the output file extension
@@ -126,6 +130,7 @@ Param
     [string]$outputEncoding = 'UTF8' ,
     [ValidateSet('Yes','No')]
     [string]$overWrite = 'No' ,
+    [string]$flatten = 'No' ,
     [string]$csvOutputDelimiter = ',',
     [string]$outputFile , 
     [string]$baseCloudURL =  'https://api.cloud.com/monitorodata' ,
@@ -389,7 +394,14 @@ if( $data -and $data.Count )
     }
     else
     {
-        $finalOutput = $data | . $outputCommand @outputArguments ## output to stdout
+        if ($flatten -ieq 'yes')
+        {
+            $finalOutput = $data | Flatten-Object | . $outputCommand @outputArguments
+        }
+        else
+        {
+            $finalOutput = $data | . $outputCommand @outputArguments
+        }
     }
 
     if( [string]::IsNullOrEmpty( $outputFile ) )
@@ -399,7 +411,17 @@ if( $data -and $data.Count )
     else
     {
         $written = $null
-        $finalOutput | Set-Content -Path $outputFile -Encoding $outputEncoding
+        $finalOutput | Set-Content -Path "$outputFile.tmp" -Encoding $outputEncoding
+        # Post processing step to remove the odata.id fields
+        if( $format -eq "csv" )
+        {
+            Import-Csv "$outputFile.tmp" | Select-Object -Property * -ExcludeProperty "*@odata.id" | Export-Csv -Path "$outputFile" -NoTypeInformation
+        }
+        else
+        {
+            Get-Content -Path "$outputFile.tmp" | Select-String -Pattern '@odata.id' -NotMatch | Set-Content -Path "$outputFile"
+        }
+        Remove-Item -Path "$outputFile.tmp"
         if( $? )
         {
             Write-Verbose -Message "Wrote $($finalOutput.Length) items to `"$outputFile`""
