@@ -52,23 +52,42 @@ The username to use when querying the Delivery Controller. If not specified the 
 
 .PARAMETER password
 
-The password for the account used to query the Delivery Controller. If the %RandomKey% environment variable is set, its contents will be used as the password
+The password for the account named by -username, as a SecureString. Omit it to be prompted with masked
+input, or set the %CITRIX_MONITOR_PASSWORD% environment variable for unattended runs. Do not build a
+SecureString from a plain string on the command line - the plain value would be written to PowerShell
+console history and captured by process-creation logging. Populate the environment variable from a secret
+store or from your scheduler: typing it into the console puts it in history just the same, and setx writes
+it to the registry permanently.
 
+.PARAMETER protocol
 
+The protocol used to reach the Delivery Controller. Defaults to https.
+
+Use http only on a network you trust: it sends the query results - which can include user names, UPNs,
+machine names and client IP addresses - in clear text, and it gives the client no way to verify that it is
+talking to the real Delivery Controller. The Windows authentication exchange is also unprotected. See
+"Securing on-premises Monitor OData API access" in the Monitor Service OData API documentation for how to
+enable SSL on the controller.
 
 
 
 .EXAMPLE
 
-'.\<script>' -username <UserName> -password <Password> -query "Users" -outputFile out.json -format json -overWrite yes -Verbose
+'.\<script>' -username <UserName> -query "Users" -outputFile out.json -format json -overWrite yes -Verbose
 
-Get list of users
+Get list of users, prompting for the password with masked input
 
 .EXAMPLE
 
-'.\<script>' -username <UserName> -password <Password> -query "Applications?`$filter=LifecycleState eq 0&`$count=true" -outputFile c:\logs\%year%\%monthname%\citrix.odata.%hour%.%minute%.%second%.csv
+'.\<script>' -username <UserName> -query "Applications?`$filter=LifecycleState eq 0&`$count=true" -outputFile c:\logs\%year%\%monthname%\citrix.odata.%hour%.%minute%.%second%.csv
 
 Get active applications
+
+.EXAMPLE
+
+'.\<script>' -ddc <DeliveryController> -protocol http -query "Users"
+
+Query a controller that has no SSL certificate bound. Only do this on a network you trust
 
 .NOTES
 
@@ -132,9 +151,11 @@ Param
     [string]$overWrite = 'No' ,
     [string]$flatten = 'No' ,
     [string]$csvOutputDelimiter = ',',
-    [string]$outputFile , 
-    [string]$username = 'USERNAME' , 
-    [string]$password = 'PASSWORD' ,
+    [string]$outputFile ,
+    [string]$username ,
+    [securestring]$password ,
+    [ValidateSet('https','http')]
+    [string]$protocol = 'https' ,
     [int]$oDataVersion = 4 ,
     [int]$retryMilliseconds = 1000
 )
@@ -239,23 +260,45 @@ else
 
 if( $PSBoundParameters[ 'username' ] )
 {
-    if( ! [string]::IsNullOrEmpty( $password ) )
+    if( $null -eq $password )
     {
-        $credential = New-Object System.Management.Automation.PSCredential( $username , ( ConvertTo-SecureString -AsPlainText -String $password -Force ) )
+        ## lets an unattended caller supply the password without putting it on the command line, where it
+        ## would land in console history and in process-creation logs
+        if( -Not [string]::IsNullOrEmpty( $env:CITRIX_MONITOR_PASSWORD ) )
+        {
+            $password = ConvertTo-SecureString -AsPlainText -String $env:CITRIX_MONITOR_PASSWORD -Force
+        }
+        else
+        {
+            $password = Read-Host -Prompt "Password for $username" -AsSecureString
+        }
     }
-    else
+    if( $null -eq $password -or $password.Length -eq 0 )
     {
-        Throw "Must specify password when using -username either via -password or %RandomKey%"
+        Throw "Must specify password when using -username either via -password or %CITRIX_MONITOR_PASSWORD%"
     }
+    $credential = New-Object System.Management.Automation.PSCredential( $username , $password )
 }
 
 if( $credential )
 {
     $params.Add( 'Credential' , $credential )
+    if( $protocol -ieq 'http' )
+    {
+        Write-Warning -Message "Authenticating over http to $ddc - credentials and results are not encrypted in transit"
+        ## PowerShell 6+ refuses to send credentials over an unencrypted connection unless this is set,
+        ## so without it -protocol http fails before the request is made. The parameter does not exist
+        ## on Windows PowerShell 5.1, which sends the request either way.
+        if( $PSVersionTable.PSVersion.Major -ge 6 )
+        {
+            $params.Add( 'AllowUnencryptedAuthentication' , $true )
+        }
+    }
 }
 
 $updated_query = $query -replace '\`' , ''
-$params[ 'Uri' ] = "http://$ddc/Citrix/Monitor/OData/v$oDataVersion/Data/$updated_query"
+## braces around the variable name are required, otherwise "$protocol:" parses as a scope qualifier
+$params[ 'Uri' ] = "${protocol}://$ddc/Citrix/Monitor/OData/v$oDataVersion/Data/$updated_query"
 
 
 Write-Verbose "URL: $($params.Uri)"
