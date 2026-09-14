@@ -48,20 +48,25 @@ The client id to be used to authenticate to Citrix DaaS (usually a GUID)
 
 .PARAMETER clientSecret
 
-The client secret for the client id specified by -clientId to authenticate to Citrix DaaS
+The client secret for the client id specified by -clientId, as a SecureString. Omit it to be prompted with
+masked input, or set the %CITRIX_CLIENT_SECRET% environment variable for unattended runs. Do not build a
+SecureString from a plain string on the command line - the plain value would be written to PowerShell
+console history and captured by process-creation logging. Populate the environment variable from a secret
+store or from your CI system: typing it into the console puts it in history just the same, and setx writes
+it to the registry permanently.
 
 
 
 
 .EXAMPLE
 
-'.\<script>' -customerId <customerId> -clientId <clientId> -clientSecret <clientSecret> -query "Users" -outputFile out.json -format json -overWrite yes -Verbose
+'.\<script>' -customerId <customerId> -clientId <clientId> -query "Users" -outputFile out.json -format json -overWrite yes -Verbose
 
-Get list of users
+Get list of users, prompting for the client secret with masked input
 
 .EXAMPLE
 
-'.\<script>' -customerId <customerId> -clientId <clientId> -clientSecret <clientSecret> -query "Applications?`$filter=LifecycleState eq 0&`$count=true" -outputFile c:\logs\%year%\%monthname%\citrix.odata.%hour.%minute%.%second%.csv
+'.\<script>' -customerId <customerId> -clientId <clientId> -query "Applications?`$filter=LifecycleState eq 0&`$count=true" -outputFile c:\logs\%year%\%monthname%\citrix.odata.%hour.%minute%.%second%.csv
 
 Get active applications
 
@@ -121,7 +126,7 @@ Param
     [Parameter(ParameterSetName='cloud',Mandatory=$false)]
     [string]$clientId ,
     [Parameter(ParameterSetName='cloud',Mandatory=$false)]
-    [string]$clientSecret ,
+    [securestring]$clientSecret ,
     [string]$query ,
     [int]$maximumItems = 0 ,
     [ValidateSet('csv','json')]
@@ -189,14 +194,15 @@ Function Get-BearerToken {
     param (
         [Parameter(Mandatory=$true)][string]
         $clientId,
-        [Parameter(Mandatory=$true)][string]
+        [Parameter(Mandatory=$true)][securestring]
         $clientSecret
     )
     [string]$bearerToken = $null
+    ## unwrapped here rather than at the parameter so the plain secret exists only for this request
     [hashtable]$body = @{
         'grant_type' = 'client_credentials'
         'client_id' = $clientId
-        'client_secret' = $clientSecret
+        'client_secret' = (New-Object System.Net.NetworkCredential( '' , $clientSecret )).Password
     }
     
     $response = $null
@@ -285,6 +291,23 @@ if( -Not $PSBoundParameters[ 'authtoken' ] )
 {
     if( -Not [string]::IsNullOrEmpty( $clientId ) ) ## don't use Remote PS SDK or use -clientId and -clientSecret
     {
+        if( $null -eq $clientSecret )
+        {
+            ## %CITRIX_CLIENT_SECRET% lets an unattended caller supply the secret without putting it on the
+            ## command line, where it would be captured by console history and readable in the process list
+            if( -Not [string]::IsNullOrEmpty( $env:CITRIX_CLIENT_SECRET ) )
+            {
+                $clientSecret = ConvertTo-SecureString -AsPlainText -String $env:CITRIX_CLIENT_SECRET -Force
+            }
+            else
+            {
+                $clientSecret = Read-Host -Prompt "Client secret for $clientId" -AsSecureString
+            }
+        }
+        if( $null -eq $clientSecret -or $clientSecret.Length -eq 0 )
+        {
+            Throw "Must specify -clientSecret either as a parameter or via %CITRIX_CLIENT_SECRET%"
+        }
         $authtoken = Get-BearerToken -clientId $clientId -clientSecret $clientSecret
     }
     else
